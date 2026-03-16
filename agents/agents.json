@@ -1,0 +1,56 @@
+{
+  "planner": {
+    "model": "claude-sonnet-4-6",
+    "timeout_seconds": 2700,
+    "max_retries": 2,
+    "verify_build_after": false,
+    "expected_output": "IMPLEMENTATION-PLAN.md",
+    "plugins": [],
+    "description": "Reads spec, produces technical implementation plan with plugin usage notes for downstream agents"
+  },
+  "builder": {
+    "model": "claude-sonnet-4-6",
+    "timeout_seconds": 2700,
+    "max_retries": 2,
+    "verify_build_after": true,
+    "expected_output": "BUILDER-NOTES.md",
+    "plugins": ["feature-dev", "frontend-design", "pr-review-toolkit"],
+    "description": "Follows plan, builds complete Next.js app. Uses /feature-dev for complex pages, /frontend-design for UI components, code-simplifier for cleanup"
+  },
+  "qa": {
+    "model": "claude-sonnet-4-6",
+    "timeout_seconds": 2700,
+    "max_retries": 2,
+    "verify_build_after": true,
+    "expected_output": "QA-REPORT.md",
+    "plugins": ["code-review", "pr-review-toolkit", "security-guidance"],
+    "description": "Finds and fixes bugs. Uses code-reviewer, silent-failure-hunter, type-design-analyzer agents. Security hook auto-triggers on edits"
+  },
+  "designer": {
+    "model": "claude-sonnet-4-6",
+    "timeout_seconds": 2700,
+    "max_retries": 2,
+    "verify_build_after": true,
+    "expected_output": "DESIGN-NOTES.md",
+    "plugins": ["frontend-design"],
+    "description": "UI polish to Linear/Vercel quality. Uses /frontend-design for creative direction, motion guidelines, and anti-generic-AI-aesthetic rules"
+  },
+  "optimizer": {
+    "model": "claude-sonnet-4-6",
+    "timeout_seconds": 2700,
+    "max_retries": 2,
+    "verify_build_after": true,
+    "expected_output": "OPTIMIZER-NOTES.md",
+    "plugins": ["pr-review-toolkit"],
+    "description": "Performance, SEO, accessibility. Uses code-simplifier for cleanup, comment-analyzer for docs, code-reviewer for final quality pass"
+  },
+  "deployer": {
+    "model": "claude-sonnet-4-6",
+    "timeout_seconds": 2700,
+    "max_retries": 2,
+    "verify_build_after": false,
+    "expected_output": "DEPLOY-NOTES.md",
+    "plugins": ["commit-commands", "security-guidance"],
+    "description": "Git, GitHub, Vercel deploy. Uses /commit for auto-generated messages, security hook for pre-flight vulnerability check"
+  }
+}

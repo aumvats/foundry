@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foundry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #09090B;
+      --bg-card: #18181B;
+      --bg-hover: #27272A;
+      --border: #3F3F46;
+      --text: #FAFAFA;
+      --text-secondary: #A1A1AA;
+      --text-muted: #71717A;
+      --accent: #8B5CF6;
+      --accent-hover: #7C3AED;
+      --green: #22C55E;
+      --amber: #F59E0B;
+      --red: #EF4444;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle grid background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 64px 64px;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 24px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Header */
+    header {
+      padding: 64px 0 48px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+    }
+
+    .badge .dot {
+      width: 6px;
+      height: 6px;
+      background: var(--green);
+      border-radius: 50%;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #FAFAFA 0%, #A1A1AA 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      font-size: 16px;
+      color: var(--text-secondary);
+      max-width: 520px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* Stats bar */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      padding: 32px 0;
+      margin-bottom: 48px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stat {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: 32px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-top: 4px;
+    }
+
+    /* Project grid */
+    .projects {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      padding-bottom: 96px;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 28px;
+      transition: all 150ms ease-out;
+      cursor: default;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: var(--card-color, var(--accent));
+      opacity: 0;
+      transition: opacity 150ms ease-out;
+    }
+
+    .project-card:hover {
+      border-color: rgba(139, 92, 246, 0.3);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .project-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .project-name {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    .status-badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      flex-shrink: 0;
+    }
+
+    .status-built {
+      background: rgba(34, 197, 94, 0.1);
+      color: var(--green);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .status-building {
+      background: rgba(245, 158, 11, 0.1);
+      color: var(--amber);
+      border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+
+    .status-queued {
+      background: rgba(161, 161, 170, 0.1);
+      color: var(--text-muted);
+      border: 1px solid rgba(161, 161, 170, 0.2);
+    }
+
+    .status-live {
+      background: rgba(139, 92, 246, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    .project-tagline {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+      margin-bottom: 16px;
+    }
+
+    .project-description {
+      font-size: 13px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .card-meta {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .meta-item {
+      font-size: 12px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meta-item svg {
+      width: 14px;
+      height: 14px;
+      opacity: 0.6;
+    }
+
+    .card-links {
+      display: flex;
+      gap: 8px;
+      margin-left: auto;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--accent);
+      text-decoration: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      transition: all 150ms ease-out;
+    }
+
+    .card-link:hover {
+      background: rgba(139, 92, 246, 0.1);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+
+    .card-link.disabled {
+      color: var(--text-muted);
+      border-color: var(--border);
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    /* Empty queue message */
+    .empty-queue {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 48px;
+      border: 2px dashed var(--border);
+      border-radius: 12px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    footer span {
+      color: var(--accent);
+    }
+
+    /* Loading skeleton */
+    .skeleton {
+      background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-hover) 50%, var(--bg-card) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      border-radius: 8px;
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      h1 { font-size: 32px; }
+      header { padding: 48px 0 32px; }
+      .stats { gap: 24px; }
+      .stat-value { font-size: 24px; }
+      .projects { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="badge"><span class="dot"></span> Autonomous Build Pipeline</div>
+      <h1>Foundry</h1>
+      <p>AI-generated micro-SaaS products built end-to-end by Claude. From idea to spec to deployed product — fully automated.</p>
+    </header>
+
+    <div class="stats" id="stats">
+      <div class="stat">
+        <div class="stat-value" id="stat-total">-</div>
+        <div class="stat-label">Projects</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="stat-live">-</div>
+        <div class="stat-label">Live</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="stat-building">-</div>
+        <div class="stat-label">Building</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="stat-queued">-</div>
+        <div class="stat-label">Queued</div>
+      </div>
+    </div>
+
+    <div class="projects" id="projects">
+      <!-- Populated by JS -->
+    </div>
+
+    <footer>
+      <p>Built with <span>Claude Cowork + Claude Code</span> by Aum Vats</p>
+    </footer>
+  </div>
+
+  <script>
+    const STATUS_ORDER = { live: 0, built: 1, building: 2, queued: 3 };
+
+    function getStatusClass(status) {
+      if (status === 'live') return 'status-live';
+      if (status === 'built') return 'status-built';
+      if (status === 'building') return 'status-building';
+      return 'status-queued';
+    }
+
+    function getStatusLabel(status) {
+      if (status === 'live') return 'Live';
+      if (status === 'built') return 'Built';
+      if (status === 'building') return 'Building';
+      return 'Queued';
+    }
+
+    function renderCard(project) {
+      const hasRepo = project.repo && project.repo.length > 0;
+      const hasUrl = project.live_url && project.live_url.length > 0;
+
+      return `
+        <div class="project-card" style="--card-color: ${project.color || '#8B5CF6'}">
+          <div class="card-header">
+            <div class="project-name">${project.name}</div>
+            <span class="status-badge ${getStatusClass(project.status)}">${getStatusLabel(project.status)}</span>
+          </div>
+          <div class="project-tagline">${project.tagline}</div>
+          <div class="project-description">${project.description}</div>
+          <div class="card-meta">
+            <div class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+              ${project.category}
+            </div>
+            <div class="meta-item">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              ${project.pricing}
+            </div>
+            <div class="card-links">
+              <a href="${hasRepo ? project.repo : '#'}" class="card-link ${hasRepo ? '' : 'disabled'}" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                Code
+              </a>
+              <a href="${hasUrl ? project.live_url : '#'}" class="card-link ${hasUrl ? '' : 'disabled'}" target="_blank" rel="noopener">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+                Visit
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    async function loadProjects() {
+      try {
+        const response = await fetch('./projects.json');
+        const data = await response.json();
+        const allProjects = [...data.projects, ...(data.queue || [])];
+
+        // Update stats
+        document.getElementById('stat-total').textContent = allProjects.length;
+        document.getElementById('stat-live').textContent = allProjects.filter(p => p.status === 'live').length;
+        document.getElementById('stat-building').textContent = allProjects.filter(p => p.status === 'building' || p.status === 'built').length;
+        document.getElementById('stat-queued').textContent = allProjects.filter(p => p.status === 'queued').length;
+
+        // Sort: live first, then built, then building, then queued
+        allProjects.sort((a, b) => (STATUS_ORDER[a.status] || 99) - (STATUS_ORDER[b.status] || 99));
+
+        const container = document.getElementById('projects');
+        if (allProjects.length === 0) {
+          container.innerHTML = '<div class="empty-queue">No projects yet. The factory is warming up...</div>';
+        } else {
+          container.innerHTML = allProjects.map(renderCard).join('');
+        }
+      } catch (err) {
+        console.error('Failed to load projects:', err);
+        document.getElementById('projects').innerHTML =
+          '<div class="empty-queue">Failed to load projects. Make sure projects.json is in the same directory.</div>';
+      }
+    }
+
+    loadProjects();
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+{
+  "factory": {
+    "name": "Foundry",
+    "owner": "Aum Vats",
+    "github_username": "aumvats",
+    "portfolio_url": "",
+    "created_at": "2026-03-15"
+  },
+  "projects": [
+    {
+      "id": "demoseed",
+      "name": "DemoSeed",
+      "tagline": "Realistic demo data in 30 seconds",
+      "description": "Generates locale-aware, narrative-driven fake data for SaaS demo environments using RandomUser, Agify, Genderize, and Nationalize APIs. Pick a template, configure scenarios, export CSV/JSON.",
+      "category": "Developer Tools",
+      "color": "#8B5CF6",
+      "pricing": "$39/mo Pro",
+      "status": "built",
+      "spec_dir": "demoseed",
+      "repo": "https://github.com/aumvats/demoseed",
+      "live_url": "https://demoseed.vercel.app",
+      "vercel_project": "demoseed",
+      "created_at": "2026-03-15",
+      "built_at": "2026-03-15",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "PROCEED",
+        "total_score": null,
+        "ran_refiner": false
+      }
+    },
+    {
+      "id": "isitup",
+      "name": "IsItUp",
+      "tagline": "Know when your site goes down before your customers do",
+      "description": "Dead-simple uptime monitoring with instant SMS/email alerts and downtime screenshots. Polls user-configured URLs on a schedule and notifies via multiple channels. Built for non-technical founders.",
+      "category": "SMB Tools",
+      "color": "#10B981",
+      "pricing": "$9/mo Pro",
+      "status": "built",
+      "spec_dir": "isitup",
+      "repo": "https://github.com/aumvats/isitup",
+      "live_url": "https://isitup.vercel.app",
+      "vercel_project": "isitup",
+      "created_at": "2026-03-15",
+      "built_at": "2026-03-15",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "PROCEED",
+        "total_score": null,
+        "ran_refiner": false
+      }
+    }
+  ],
+  "queue": []
+}
