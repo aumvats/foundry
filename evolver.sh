@@ -4,7 +4,7 @@
 # ============================================================================
 # Runs the Evolver agent to analyze today's runs and propose new rules.
 #
-# Cron: 00 23 * * * cd ~/Code/exploratory/micro-saas-factory && ./evolver.sh >> logs/evolver.log 2>&1
+# Cron: 00 23 * * * cd ~/Code/exploratory/foundry && ./evolver.sh >> logs/evolver.log 2>&1
 # ============================================================================
 
 set -e
@@ -50,7 +50,11 @@ fi
 # ── GENERATE HISTORY SUMMARY ─────────────────────────────────────────────────
 log "Generating history summary for Evolver context..."
 generate_history_summary > /dev/null
-ok "History summary at /tmp/factory-history-summary.json"
+if [ -f "/tmp/factory-history-summary.json" ]; then
+  ok "History summary at /tmp/factory-history-summary.json"
+else
+  warn "History summary generation failed — Evolver will have no historical context"
+fi
 
 # ── RUN EVOLVER AGENT ────────────────────────────────────────────────────────
 TODAY=$(date +%Y-%m-%d)

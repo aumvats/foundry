@@ -10,8 +10,8 @@
 #   --category <cat>  Target category hint for Ideator
 #
 # Cron:
-#   00 10 * * * cd ~/Code/exploratory/micro-saas-factory && ./create-spec.sh --count 1
-#   35 10 * * * cd ~/Code/exploratory/micro-saas-factory && ./create-spec.sh --count 1
+#   00 10 * * * cd ~/Code/exploratory/foundry && ./create-spec.sh --count 1
+#   35 10 * * * cd ~/Code/exploratory/foundry && ./create-spec.sh --count 1
 # ============================================================================
 
 set -e
@@ -154,7 +154,7 @@ PROJECT_DIR: $PROJECT_DIR
 $([ -n "$CATEGORY_TARGET" ] && echo "CATEGORY_TARGET: $CATEGORY_TARGET")
 $([ -n "${KILL_REASON:-}" ] && echo "KILL_REASON: Your previous idea was killed for this reason: $KILL_REASON. Generate a completely different concept.")
 
-Read micro-saas-factory/projects.json and micro-saas-factory/API-CATALOG.md.
+Read foundry/projects.json and foundry/API-CATALOG.md.
 Read demoseed/DEMOSEED-SPEC.md as your quality reference for Section 5.
 Write your outputs to: $PROJECT_DIR/"
 
@@ -190,8 +190,8 @@ Write your outputs to: $PROJECT_DIR/"
 
 PROJECT_DIR: $PROJECT_DIR
 Read the spec file (ending in -SPEC.md) from $PROJECT_DIR.
-Read micro-saas-factory/API-CATALOG.md to verify API claims.
-Read micro-saas-factory/projects.json for portfolio context.
+Read foundry/API-CATALOG.md to verify API claims.
+Read foundry/projects.json for portfolio context.
 Write your review to: $PROJECT_DIR/CRITIC-REVIEW.md
 The LAST LINE of CRITIC-REVIEW.md must be exactly: VERDICT: PROCEED, VERDICT: REWRITE, or VERDICT: KILL"
 
@@ -201,8 +201,8 @@ The LAST LINE of CRITIC-REVIEW.md must be exactly: VERDICT: PROCEED, VERDICT: RE
       break
     fi
 
-    # Parse verdict from LAST LINE (strict — strip all whitespace)
-    LAST_LINE=$(tail -1 "$PROJECT_DIR/CRITIC-REVIEW.md" 2>/dev/null | tr -d '[:space:]')
+    # Parse verdict from last non-empty line (handles trailing newlines)
+    LAST_LINE=$(grep -v '^[[:space:]]*$' "$PROJECT_DIR/CRITIC-REVIEW.md" 2>/dev/null | tail -1 | tr -d '[:space:]')
     log "Critic verdict: $LAST_LINE"
 
     case "$LAST_LINE" in
@@ -279,7 +279,7 @@ The LAST LINE of CRITIC-REVIEW.md must be exactly: VERDICT: PROCEED, VERDICT: RE
 PROJECT_DIR: $PROJECT_DIR
 Read the spec file (ending in -SPEC.md) from $PROJECT_DIR.
 Read CRITIC-REVIEW.md from $PROJECT_DIR for issues to address.
-Read micro-saas-factory/API-CATALOG.md for API replacements if needed.
+Read foundry/API-CATALOG.md for API replacements if needed.
 Overwrite the spec and write REFINEMENT-LOG.md to: $PROJECT_DIR/"
 
     if ! run_spec_agent "refiner" "$REFINER_TIMEOUT" "3" "claude-opus-4-6" "$PROJECT_ID" "$REFINER_PROMPT"; then
@@ -297,7 +297,7 @@ Overwrite the spec and write REFINEMENT-LOG.md to: $PROJECT_DIR/"
 PROJECT_DIR: $PROJECT_DIR
 Read the spec file (ending in -SPEC.md) from $PROJECT_DIR.
 Read REFINEMENT-LOG.md if it exists in $PROJECT_DIR.
-Read micro-saas-factory/agents/rules.json if it exists in the factory directory.
+Read foundry/agents/rules.json if it exists in the factory directory.
 Write ONLY SPEC-VALIDATION.json to: $PROJECT_DIR/
 Do NOT modify any other file. Do NOT touch projects.json."
 
@@ -363,6 +363,14 @@ Do NOT modify any other file. Do NOT touch projects.json."
         ran_refiner: $ran_refiner
       }
     }')
+
+  # Validate NEW_ENTRY is well-formed JSON before touching projects.json
+  if ! echo "$NEW_ENTRY" | jq . > /dev/null 2>&1; then
+    warn "projects.json entry for $PROJECT_ID is malformed — skipping append, flagging needs_review"
+    echo "needs_review:$PROJECT_ID:malformed_projects_entry" >> "$LOG_DIR/needs-review-queue.md"
+    unset RUN_REFINER KILL_REASON
+    continue
+  fi
 
   add_project_to_json "$NEW_ENTRY"
 

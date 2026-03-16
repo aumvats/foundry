@@ -64,7 +64,7 @@ if [ "$GENERATE_COUNT" -gt 0 ] 2>/dev/null; then
   # Get existing project IDs to avoid duplicates
   EXISTING=$(jq -r '([.projects[].id, .queue[].id] | join(", "))' "$PROJECTS_JSON")
 
-  claude -p "You are the idea generation engine for a Foundry.
+  claude --dangerously-skip-permissions --model claude-sonnet-4-6 -p "You are the idea generation engine for Foundry.
 
 CONTEXT:
 - We build micro-SaaS products using free public APIs from https://github.com/public-apis/public-apis
@@ -109,7 +109,7 @@ Output ONLY a valid JSON array. No markdown, no explanation, just the array." > 
     IDEA_DIR="$ROOT_DIR/$IDEA_ID"
     mkdir -p "$IDEA_DIR"
 
-    claude -p "You are a product specification writer for a Foundry.
+    claude --dangerously-skip-permissions --model claude-sonnet-4-6 -p "You are a product specification writer for Foundry.
 
 PROJECT DETAILS:
 $IDEA_JSON
@@ -134,7 +134,7 @@ For the UI guidelines: pick either dark-first or light-first depending on the au
 Output ONLY the markdown. No preamble." > "$IDEA_DIR/$(echo "$IDEA_ID" | tr '[:lower:]' '[:upper:]' | tr '-' '')-SPEC.md"
 
     # Generate Claude Code prompt
-    claude -p "You are writing a Claude Code implementation prompt for a micro-SaaS project.
+    claude --dangerously-skip-permissions --model claude-sonnet-4-6 -p "You are writing a Claude Code implementation prompt for a micro-SaaS project.
 
 The spec file is at: $IDEA_DIR/
 

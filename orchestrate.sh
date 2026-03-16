@@ -100,13 +100,20 @@ while IFS= read -r project_id; do
   echo -e "${BOLD}══════════════════════════════════════════════════════════${NC}"
 
   # Check build_attempts before starting
+  # --project flag bypasses the attempts gate (operator knows what they're doing)
   current_attempts=$(get_project_field "$project_id" ".build_attempts // 0")
-  if [ "$current_attempts" -ge 2 ]; then
+  if [ "$current_attempts" -ge 2 ] && [ -z "$SPECIFIC_PROJECT" ]; then
     warn "$project_id has already failed $current_attempts build attempts — marking needs_spec_revision"
+    warn "To force a retry: ./orchestrate.sh --project $project_id"
     update_project_field "$project_id" ".status" '"needs_spec_revision"'
     echo "$(date): $project_id skipped after $current_attempts failed attempts" >> "$LOG_DIR/alerts.log"
     FAILED_COUNT=$((FAILED_COUNT + 1))
     continue
+  elif [ "$current_attempts" -ge 2 ] && [ -n "$SPECIFIC_PROJECT" ]; then
+    log "Operator-forced retry for $project_id (previous attempts: $current_attempts) — resetting counter"
+    write_projects_json "(.projects[] | select(.id == \"$project_id\") | .build_attempts) = 0"
+    write_projects_json "(.projects[] | select(.id == \"$project_id\") | .status) = \"queued\""
+    current_attempts=0
   fi
 
   # Increment build_attempts

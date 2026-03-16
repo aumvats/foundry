@@ -5,7 +5,7 @@
 ## Session Summary
 
 Claude Code (build engine) was initialized and reviewed the full factory system:
-- Read `FACTORY-GUIDE.md` — understood the two-pass build process, quality bar, deploy pipeline
+- Read `FOUNDRY-GUIDE.md` — understood the two-pass build process, quality bar, deploy pipeline
 - Read `projects.json` — checked for queued projects
 - Read `build-project.sh` and `run-factory.sh` — confirmed both scripts are operational
 

@@ -95,7 +95,7 @@ These are changes to files I own (agent definitions, factory guide):
 |---|------|--------|
 | 1 | `agents/planner.md` | Output: `plan/<project-id>-plan.md` → `IMPLEMENTATION-PLAN.md` in project root |
 | 2 | `agents/builder.md` | Input: `plan/<project-id>-plan.md` → `IMPLEMENTATION-PLAN.md` |
-| 3 | `FACTORY-GUIDE.md` | "Next.js 14" → "Next.js 16" in Technical Standards |
+| 3 | `FOUNDRY-GUIDE.md` | "Next.js 14" → "Next.js 16" in Technical Standards |
 
 I'll make these edits now, in the files themselves — not in the plan doc.
 

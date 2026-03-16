@@ -15,7 +15,7 @@ You are the build engine for a Foundry — an autonomous pipeline that creates, 
 ```
 ~/Code/exploratory/
 ├── foundry/             # Factory control center
-│   ├── FACTORY-GUIDE.md            # ← YOU ARE HERE. Read this first.
+│   ├── FOUNDRY-GUIDE.md            # ← YOU ARE HERE. Read this first.
 │   ├── projects.json               # Registry of all projects + statuses
 │   ├── build-project.sh            # Multi-agent build pipeline script
 │   ├── run-factory.sh              # Full factory runner (queue processing)

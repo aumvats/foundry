@@ -1,0 +1,17 @@
+# Runtime state and logs
+logs/
+state/
+*.lock
+.*.lock
+.deployed-url
+
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# OS
+.DS_Store

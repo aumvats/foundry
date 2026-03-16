@@ -5,7 +5,7 @@
 # Checks each API in API-CATALOG.md with a HEAD/GET request and flags any
 # that return error codes or redirect to payment pages.
 #
-# Cron: 00 09 * * 1 cd ~/Code/exploratory/micro-saas-factory && ./api-health-check.sh >> logs/api-health.log 2>&1
+# Cron: 00 09 * * 1 cd ~/Code/exploratory/foundry && ./api-health-check.sh >> logs/api-health.log 2>&1
 # ============================================================================
 
 ROOT_DIR="$HOME/Code/exploratory"
@@ -34,7 +34,7 @@ log "API health check starting: $(date)"
 
 HEALTH_PROMPT="You are an API health checker for the Micro-SaaS Factory.
 
-Read micro-saas-factory/API-CATALOG.md to get the list of all APIs with their base URLs.
+Read foundry/API-CATALOG.md to get the list of all APIs with their base URLs.
 
 For each API in the catalog:
 1. Make a HEAD or GET request to the base URL (use curl or fetch)

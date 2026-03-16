@@ -147,7 +147,7 @@ This gives each agent:
 ├── run-factory.sh                ← kept as reference
 ├── projects.json
 ├── index.html
-├── FACTORY-GUIDE.md
+├── FOUNDRY-GUIDE.md
 ├── BUILD-ENGINE-STATUS.md
 └── PIPELINE-ARCHITECTURE.md      ← this file
 ```

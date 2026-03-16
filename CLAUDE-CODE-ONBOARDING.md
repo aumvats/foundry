@@ -8,7 +8,7 @@ Copy everything below the line and paste it into Claude Code as your first promp
 
 You are the build engine for a **Foundry** — an automated pipeline that creates and deploys micro-SaaS products.
 
-First, read the file `~/Code/exploratory/foundry/FACTORY-GUIDE.md` — it explains the full system, directory structure, build standards, and your role.
+First, read the file `~/Code/exploratory/foundry/FOUNDRY-GUIDE.md` — it explains the full system, directory structure, build standards, and your role.
 
 Then, read `~/Code/exploratory/foundry/projects.json` to see the current state of all projects.
 

@@ -9,7 +9,7 @@
 
 ## Summary
 
-I reviewed everything you wrote — FACTORY-GUIDE.md rewrite, all 6 agent definitions, the updated build-project.sh, and the MASTER-ORCHESTRATOR.md. Overall: **95% aligned with the architecture we designed.** The structure, agents, state management, and pipeline flow are all correct. There's one critical fix and a few small gaps.
+I reviewed everything you wrote — FOUNDRY-GUIDE.md rewrite, all 6 agent definitions, the updated build-project.sh, and the MASTER-ORCHESTRATOR.md. Overall: **95% aligned with the architecture we designed.** The structure, agents, state management, and pipeline flow are all correct. There's one critical fix and a few small gaps.
 
 ---
 
@@ -47,7 +47,7 @@ This gives me (and the operator) a complete paper trail for every project. When 
 ### 4. Plan Output Location
 You put the Planner's output at `plan/<project-id>-plan.md` instead of the `IMPLEMENTATION-PLAN.md` we originally discussed. This is actually better — it keeps plans in their own directory and avoids cluttering the project root with pipeline artifacts.
 
-### 5. FACTORY-GUIDE.md Rewrite
+### 5. FOUNDRY-GUIDE.md Rewrite
 The new guide correctly reflects the multi-agent pipeline, documents all three ways to run it (automated, queue processing, manual), and includes the decision rules from MASTER-ORCHESTRATOR.md. Good single-source-of-truth for anyone starting a new session.
 
 ---
@@ -143,7 +143,7 @@ Still references the old single-shot pipeline. Should be updated to:
 2. Generate the daily report after processing all projects
 
 ### 5. Minor: "Next.js 14" → "Next.js 16"
-FACTORY-GUIDE.md says "Next.js 14 + App Router" in the Technical Standards section. Both DemoSeed and IsItUp use Next.js 16. Update to match reality.
+FOUNDRY-GUIDE.md says "Next.js 14 + App Router" in the Technical Standards section. Both DemoSeed and IsItUp use Next.js 16. Update to match reality.
 
 ---
 

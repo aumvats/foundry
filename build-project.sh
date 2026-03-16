@@ -195,6 +195,15 @@ pause_project() {
   jq ".paused = true | .pause_reason = \"$reason\" | .status = \"paused\"" "$STATE_FILE" > "${STATE_FILE}.tmp" && mv "${STATE_FILE}.tmp" "$STATE_FILE"
 }
 
+# ── AGENT MODEL MAP ─────────────────────────────────────────────────────────
+# Heavy agents (create code, design) get Opus; lightweight agents get Sonnet
+agent_model() {
+  case "$1" in
+    builder|designer|optimizer|deployer) echo "claude-opus-4-6" ;;
+    *)                                   echo "claude-sonnet-4-6" ;;
+  esac
+}
+
 # ── AGENT RUNNER ────────────────────────────────────────────────────────────
 # Runs a single agent via claude -p with the agent's prompt + project context
 run_agent() {
@@ -242,7 +251,7 @@ When done, make sure npm run build passes (if applicable to your role)."
 
     timeout "$AGENT_TIMEOUT" claude \
       --dangerously-skip-permissions \
-      --model claude-sonnet-4-6 \
+      --model "$(agent_model "$agent_name")" \
       --add-dir "$PROJECT_DIR" \
       --add-dir "$FACTORY_DIR" \
       -p "$full_prompt" 2>&1 | tee -a "$LOG_FILE"
@@ -367,6 +376,25 @@ if [ "$PIPELINE_FAILED" = true ]; then
   echo -e "${BOLD}║${NC}  ${YELLOW}or fix the issue manually and re-run.${NC}"
   echo -e "${BOLD}╚══════════════════════════════════════════════════════════╝${NC}\n"
   exit 1
+fi
+
+# Final build gate — catches any breakage introduced by designer/optimizer
+cd "$PROJECT_DIR"
+if [ -f "package.json" ]; then
+  log "Final build verification..."
+  if ! npm run build 2>&1 | tail -10; then
+    warn "Final build failed — pausing pipeline"
+    write_projects_json "(.projects[] | select(.id == \"$PROJECT_ID\") | .status) = \"paused\""
+    pause_project "npm run build failed after optimizer agent"
+    echo -e "\n${BOLD}╔══════════════════════════════════════════════════════════╗${NC}"
+    echo -e "${BOLD}║           FINAL BUILD FAILED — NEEDS ATTENTION          ║${NC}"
+    echo -e "${BOLD}╠══════════════════════════════════════════════════════════╣${NC}"
+    echo -e "${BOLD}║${NC}  Project: ${GREEN}$PROJECT_NAME${NC}"
+    echo -e "${BOLD}║${NC}  Log:     ${BLUE}$LOG_FILE${NC}"
+    echo -e "${BOLD}╚══════════════════════════════════════════════════════════╝${NC}\n"
+    exit 1
+  fi
+  ok "Final build verified"
 fi
 
 # Pipeline succeeded — update status to "built" and pause for deploy approval

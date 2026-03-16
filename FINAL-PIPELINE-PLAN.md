@@ -33,7 +33,7 @@ We designed a multi-agent pipeline where each project goes through 6 specialized
 - All 6 agent definition files with detailed prompts, checklists, and output formats
 - Each agent writes a report file (BUILDER-NOTES.md, QA-REPORT.md, etc.) — audit trail
 - Updated `build-project.sh` with `--resume-from` and `--deploy` flags
-- Updated `FACTORY-GUIDE.md` with multi-agent documentation
+- Updated `FOUNDRY-GUIDE.md` with multi-agent documentation
 - The `plan/` subdirectory concept for Planner output
 
 **Both independently arrived at:**
@@ -93,7 +93,7 @@ This gives each agent:
 ```
 ~/Code/exploratory/
 ├── foundry/                    # Factory control center
-│   ├── FACTORY-GUIDE.md                   # Quick-start guide (Cowork wrote, keep as-is)
+│   ├── FOUNDRY-GUIDE.md                   # Quick-start guide (Cowork wrote, keep as-is)
 │   ├── PIPELINE-ARCHITECTURE.md           # System design doc (Claude Code wrote)
 │   ├── FINAL-PIPELINE-PLAN.md             # ← THIS FILE — merged plan
 │   ├── CLAUDE-CODE-REVIEW.md              # Claude Code's review of Cowork's work
@@ -575,7 +575,7 @@ The multi-agent pipeline places specific demands on spec quality. Better specs =
 |---|------|--------|
 | 7 | `agents/planner.md` | Output path: `plan/<id>-plan.md` → `IMPLEMENTATION-PLAN.md` |
 | 8 | `agents/builder.md` | Input path: `plan/<id>-plan.md` → `IMPLEMENTATION-PLAN.md` |
-| 9 | `FACTORY-GUIDE.md` | Fix "Next.js 14" → "Next.js 16" |
+| 9 | `FOUNDRY-GUIDE.md` | Fix "Next.js 14" → "Next.js 16" |
 
 ### Files to Update Together
 
