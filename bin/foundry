@@ -1,0 +1,181 @@
+#!/bin/bash
+# ============================================================================
+# Foundry CLI — Terminal command for managing the build pipeline
+# ============================================================================
+# Usage:
+#   foundry              # Show menu
+#   foundry status       # Dashboard
+#   foundry status <id>  # Project detail
+#   foundry approve      # Show deploy queue
+#   foundry approve <id> # Approve and deploy
+#   foundry build        # Trigger builds
+#   foundry spec [N]     # Generate N specs (default: 1)
+#   foundry review       # List specs needing review
+#   foundry logs         # Show latest daily report
+#   foundry rules        # Show active rules
+#   foundry help         # This help text
+# ============================================================================
+
+FOUNDRY_DIR="$HOME/Code/exploratory/foundry"
+
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+PURPLE='\033[0;35m'
+CYAN='\033[0;36m'
+GRAY='\033[0;90m'
+NC='\033[0m'
+BOLD='\033[1m'
+DIM='\033[2m'
+
+show_help() {
+  echo -e "\n${BOLD}${PURPLE}Foundry${NC} — Autonomous SaaS Build Pipeline\n"
+  echo -e "  ${BOLD}foundry${NC}                Show interactive menu"
+  echo -e "  ${BOLD}foundry status${NC}         Dashboard (all projects)"
+  echo -e "  ${BOLD}foundry status ${DIM}<id>${NC}    Detail view for one project"
+  echo -e "  ${BOLD}foundry approve${NC}        Show what's waiting for deploy"
+  echo -e "  ${BOLD}foundry approve ${DIM}<id>${NC}  Approve and deploy a project"
+  echo -e "  ${BOLD}foundry build${NC}          Trigger build for queued projects"
+  echo -e "  ${BOLD}foundry build ${DIM}<id>${NC}    Build a specific project"
+  echo -e "  ${BOLD}foundry spec${NC}           Generate 1 new product spec"
+  echo -e "  ${BOLD}foundry spec ${DIM}<N>${NC}      Generate N specs"
+  echo -e "  ${BOLD}foundry review${NC}         List specs needing operator review"
+  echo -e "  ${BOLD}foundry logs${NC}           Show latest daily report"
+  echo -e "  ${BOLD}foundry logs ${DIM}<type>${NC}   Show latest log (daily/spec/evolver/api/cron)"
+  echo -e "  ${BOLD}foundry rules${NC}          Show active evolved rules"
+  echo -e "  ${BOLD}foundry help${NC}           This help text"
+  echo ""
+}
+
+show_menu() {
+  echo -e "\n${BOLD}${PURPLE}╔══════════════════════════════════════╗${NC}"
+  echo -e "${BOLD}${PURPLE}║         Foundry Control Center       ║${NC}"
+  echo -e "${BOLD}${PURPLE}╚══════════════════════════════════════╝${NC}\n"
+  echo -e "  ${BOLD}1${NC}  Status      — Project dashboard"
+  echo -e "  ${BOLD}2${NC}  Approve     — Deploy a built project"
+  echo -e "  ${BOLD}3${NC}  Build       — Trigger builds"
+  echo -e "  ${BOLD}4${NC}  Spec        — Generate new product spec"
+  echo -e "  ${BOLD}5${NC}  Review      — Review specs needing attention"
+  echo -e "  ${BOLD}6${NC}  Logs        — View recent logs"
+  echo -e "  ${BOLD}7${NC}  Rules       — View/manage evolved rules"
+  echo -e "  ${BOLD}h${NC}  Help        — Show all commands"
+  echo -e "  ${BOLD}q${NC}  Quit"
+  echo ""
+  read -p "  Choose [1-7/h/q]: " choice
+  case "$choice" in
+    1) cmd_status ;;
+    2) cmd_approve ;;
+    3) cmd_build ;;
+    4) cmd_spec ;;
+    5) cmd_review ;;
+    6) cmd_logs ;;
+    7) cmd_rules ;;
+    h) show_help ;;
+    q) exit 0 ;;
+    *) echo -e "  ${RED}Invalid choice${NC}"; show_menu ;;
+  esac
+}
+
+cmd_status() {
+  if [ -n "$1" ]; then
+    "$FOUNDRY_DIR/status.sh" "$1"
+  else
+    "$FOUNDRY_DIR/status.sh"
+  fi
+}
+
+cmd_approve() {
+  if [ -n "$1" ]; then
+    "$FOUNDRY_DIR/approve.sh" "$1"
+  else
+    "$FOUNDRY_DIR/approve.sh" --status
+    echo ""
+    read -p "  Project ID to approve (or q to quit): " pid
+    [ "$pid" = "q" ] && return
+    [ -n "$pid" ] && "$FOUNDRY_DIR/approve.sh" "$pid"
+  fi
+}
+
+cmd_build() {
+  if [ -n "$1" ]; then
+    "$FOUNDRY_DIR/build-project.sh" "$1"
+  else
+    echo -e "\n${BOLD}Queued projects:${NC}"
+    jq -r '.projects[] | select(.status == "queued") | "  ○ \(.id) — \(.name)"' "$FOUNDRY_DIR/projects.json"
+    QUEUED=$(jq -r '[.projects[] | select(.status == "queued")] | length' "$FOUNDRY_DIR/projects.json")
+    if [ "$QUEUED" -eq 0 ]; then
+      echo -e "  ${GRAY}No projects queued. Run ${NC}${BOLD}foundry spec${NC}${GRAY} to generate one.${NC}"
+      return
+    fi
+    echo ""
+    read -p "  Project ID to build (or 'all' for queue, q to quit): " pid
+    [ "$pid" = "q" ] && return
+    if [ "$pid" = "all" ]; then
+      "$FOUNDRY_DIR/orchestrate.sh"
+    elif [ -n "$pid" ]; then
+      "$FOUNDRY_DIR/build-project.sh" "$pid"
+    fi
+  fi
+}
+
+cmd_spec() {
+  local count="${1:-1}"
+  echo -e "\n${BLUE}Generating $count spec(s)...${NC}\n"
+  "$FOUNDRY_DIR/create-spec.sh" --count "$count"
+}
+
+cmd_review() {
+  "$FOUNDRY_DIR/review-spec.sh" --list 2>/dev/null || echo -e "  ${GRAY}No specs needing review.${NC}"
+}
+
+cmd_logs() {
+  local type="${1:-daily}"
+  local log_file=""
+
+  case "$type" in
+    daily)   log_file=$(ls -t "$FOUNDRY_DIR/logs"/daily-report-*.md 2>/dev/null | head -1) ;;
+    spec)    log_file=$(ls -t "$FOUNDRY_DIR/logs"/spec-creation-*.md 2>/dev/null | head -1) ;;
+    evolver) log_file=$(ls -t "$FOUNDRY_DIR/logs"/rule-proposals-*.md 2>/dev/null | head -1) ;;
+    api)     log_file=$(ls -t "$FOUNDRY_DIR/logs"/api-health-*.md 2>/dev/null | head -1) ;;
+    cron)    log_file="$FOUNDRY_DIR/logs/cron.log" ;;
+    *)
+      echo -e "  ${RED}Unknown log type: $type${NC}"
+      echo -e "  Options: daily, spec, evolver, api, cron"
+      return
+      ;;
+  esac
+
+  if [ -n "$log_file" ] && [ -f "$log_file" ]; then
+    echo -e "\n${DIM}── $log_file ──${NC}\n"
+    cat "$log_file"
+  else
+    echo -e "  ${GRAY}No $type logs found yet.${NC}"
+  fi
+}
+
+cmd_rules() {
+  local rules_file="$FOUNDRY_DIR/agents/rules.json"
+  local count=$(jq 'length' "$rules_file" 2>/dev/null || echo "0")
+
+  if [ "$count" -eq 0 ]; then
+    echo -e "\n  ${GRAY}No evolved rules yet. The Evolver cron (11 PM daily) will populate these.${NC}"
+  else
+    echo -e "\n${BOLD}Active Rules ($count):${NC}\n"
+    jq -r '.[] | select(.active == true) | "  \(.id): \(.append_to_prompt | .[0:80])...\n    Applies to: \(.applies_to | join(", "))\n    Added: \(.added)\n    Reason: \(.reason)\n"' "$rules_file" 2>/dev/null
+  fi
+}
+
+# ── MAIN ──────────────────────────────────────────────────────────────────────
+case "${1:-}" in
+  status)   shift; cmd_status "$@" ;;
+  approve)  shift; cmd_approve "$@" ;;
+  build)    shift; cmd_build "$@" ;;
+  spec)     shift; cmd_spec "$@" ;;
+  review)   shift; cmd_review "$@" ;;
+  logs)     shift; cmd_logs "$@" ;;
+  rules)    shift; cmd_rules "$@" ;;
+  help|-h|--help) show_help ;;
+  "")       show_menu ;;
+  *)        echo -e "${RED}Unknown command: $1${NC}"; show_help; exit 1 ;;
+esac
