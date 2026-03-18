@@ -110,7 +110,7 @@
       "status": "live",
       "spec_dir": "project-1773813351",
       "repo": "https://github.com/aumvats/project-1773813351",
-      "live_url": "https://project-1773813351.vercel.app",
+      "live_url": "https://allclear-app.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-18",
       "built_at": "2026-03-18",
@@ -160,19 +160,26 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "building",
+      "status": "live",
       "spec_dir": "project-1773819423",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/buildcast",
+      "live_url": "https://buildcast-app.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-18",
-      "built_at": "",
-      "deployed_at": "",
+      "built_at": "2026-03-18",
+      "deployed_at": "2026-03-18",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 76,
         "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 186,
+        "builder": 836,
+        "qa": 898,
+        "designer": 515,
+        "optimizer": 451
       }
     }
   ],
