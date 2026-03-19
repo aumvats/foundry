@@ -28,6 +28,12 @@
         "critic_verdict": "PROCEED",
         "total_score": null,
         "ran_refiner": false
+      },
+      "linear": {
+        "spec_issue_id": "94c997b7-3ef7-4db0-b00f-640029bea756",
+        "build_issue_id": "fc5e7918-7174-43d8-a9ea-168c6cecaf66",
+        "deploy_issue_id": "07cd062f-5801-426d-8f60-6032650d6075",
+        "project_id": "f3c0c7d2-8533-4f08-b8f2-81335f157ccf"
       }
     },
     {
@@ -51,6 +57,12 @@
         "critic_verdict": "PROCEED",
         "total_score": null,
         "ran_refiner": false
+      },
+      "linear": {
+        "spec_issue_id": "ff1ed6cd-160a-4b8c-a7f3-0059ade3fb10",
+        "build_issue_id": "cfebad64-dbf1-43a5-9fd3-b8a3533501a3",
+        "deploy_issue_id": "d7aa946d-471f-409a-901b-a6dbead92d3b",
+        "project_id": "089c4f4f-cf1b-421f-b684-5e766fd035c5"
       }
     },
     {
@@ -74,6 +86,12 @@
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 0,
         "ran_refiner": false
+      },
+      "linear": {
+        "spec_issue_id": "bd18b8de-6203-4f4a-aea3-93a73f32b2d2",
+        "build_issue_id": "2077060a-a7a6-4dab-81d7-464937103793",
+        "deploy_issue_id": "3841875d-6cca-4775-b9d2-640380602ea9",
+        "project_id": "3ee3d753-beee-4aa4-b8ec-dead67bc5741"
       }
     },
     {
@@ -97,6 +115,12 @@
         "critic_verdict": "VERDICT:REWRITE",
         "total_score": 0,
         "ran_refiner": true
+      },
+      "linear": {
+        "spec_issue_id": "f86272af-f2e4-471e-aa71-1d9935ddb624",
+        "build_issue_id": "714bb16a-a897-41a2-903b-ff3523818870",
+        "deploy_issue_id": "aeebd192-d974-4cdb-9def-4566683356ac",
+        "project_id": "5065cb16-a242-4e0f-9b1f-e738bd206950"
       }
     },
     {
@@ -127,6 +151,12 @@
         "qa": 918,
         "designer": 478,
         "optimizer": 633
+      },
+      "linear": {
+        "spec_issue_id": "48500715-3dd5-4db8-9fa3-fc9b5275d74a",
+        "build_issue_id": "d3b5e3ea-9183-4ee4-8717-b01bf8db0633",
+        "deploy_issue_id": "09b67e4a-6f33-4f8b-af85-04bce873e3f3",
+        "project_id": "ed817336-565e-4a1d-8a7a-b98dc4fa4c73"
       }
     },
     {
@@ -137,7 +167,7 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "needs_review",
+      "status": "queued",
       "spec_dir": "project-1773814327",
       "repo": "",
       "live_url": "",
@@ -150,6 +180,10 @@
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 70,
         "ran_refiner": false
+      },
+      "linear": {
+        "spec_issue_id": "20c6e571-8f1d-4120-bacf-e5160d31f1b1",
+        "project_id": "945043aa-7632-4918-abb6-708f55ab0d2a"
       }
     },
     {
@@ -180,6 +214,141 @@
         "qa": 898,
         "designer": 515,
         "optimizer": 451
+      },
+      "linear": {
+        "spec_issue_id": "309eecc6-376a-4dec-a1c8-992dca7fbb31",
+        "build_issue_id": "f520e868-0e59-4c91-9563-9196925f8feb",
+        "deploy_issue_id": "21f90411-abac-4a86-8c0f-a4cbfacdf910",
+        "project_id": "4d513b92-e2a3-449d-8e35-e000cfca937a"
+      }
+    },
+    {
+      "id": "project-1773894666",
+      "name": "SolarCast — Product Specification",
+      "tagline": "SolarCast turns solar production forecasts into actionable scheduling decisions. Instead of showing ",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1773894666",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-19",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 72,
+        "ran_refiner": true
+      },
+      "linear": {
+        "spec_issue_id": "e574e594-a94c-4136-892d-c31e78b4f3f7",
+        "project_id": "0f6841df-324b-4670-9de4-5d72297114c3"
+      }
+    },
+    {
+      "id": "project-1773901496",
+      "name": "HolidayGrid — Product Specification",
+      "tagline": "HolidayGrid is a team holiday intelligence dashboard for distributed companies. It takes a simple in",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1773901496",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-19",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 72,
+        "ran_refiner": false
+      }
+    },
+    {
+      "id": "project-1773902365",
+      "name": "ZipScope — Product Specification",
+      "tagline": "ZipScope turns raw US Census data into polished, exportable demographic reports for real estate agen",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "live",
+      "spec_dir": "project-1773902365",
+      "repo": "https://github.com/aumvats/zipscope",
+      "live_url": "https://zipscope.vercel.app",
+      "vercel_project": "",
+      "created_at": "2026-03-19",
+      "built_at": "2026-03-19",
+      "deployed_at": "2026-03-19",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 70,
+        "ran_refiner": true
+      },
+      "agent_timings": {
+        "planner": 165,
+        "builder": 946,
+        "qa": 818,
+        "designer": 426,
+        "optimizer": 887
+      },
+      "linear": {
+        "deploy_issue_id": "a1a7c5e0-d776-4166-b68d-5c5a209eb8bd"
+      }
+    },
+    {
+      "id": "project-1773903417",
+      "name": "PriceMap — Product Specification",
+      "tagline": "PriceMap converts a base product price into a complete, tax-correct pricing table for 40+ countries ",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1773903417",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-19",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 72,
+        "ran_refiner": false
+      }
+    },
+    {
+      "id": "project-1773906164",
+      "name": "ReviewTone — Product Specification",
+      "tagline": "ReviewTone is a code review culture intelligence dashboard for engineering leaders. It connects to a",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1773906164",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-19",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 70,
+        "ran_refiner": false
       }
     }
   ],
