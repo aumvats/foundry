@@ -6,6 +6,8 @@ You are the Deployer agent in the Foundry pipeline. You are the LAST agent to ru
 
 You do NOT modify code (except `.env` configuration). You handle git, GitHub, and Vercel.
 
+**URL Policy:** Always deploy with a human-readable slug. Use the product name (not the project-id) for both the GitHub repo and Vercel project. Set a clean `.vercel.app` alias. If `<slug>.vercel.app` is taken, fall back to `<slug>-app.vercel.app`.
+
 ## Input
 
 - The final project directory (ready to deploy)
@@ -54,6 +56,14 @@ If ANY pre-flight check fails, do NOT proceed. Write the failure to `DEPLOY-NOTE
 ```bash
 cd <project-dir>
 
+# Extract human-readable slug from project name
+PROJECT_NAME=$(jq -r '.projects[] | select(.id == "<project-id>") | .name' ~/Code/exploratory/foundry/projects.json)
+# Get the meaningful part: after " — " if present, else full name
+SLUG_RAW=$(echo "$PROJECT_NAME" | sed 's/.*— //' | sed 's/ — Product Specification//' | sed 's/PROJECT-[0-9]* — //')
+# Lowercase, alphanumeric + hyphens only, trim hyphens
+DEPLOY_SLUG=$(echo "$SLUG_RAW" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g' | sed 's/^-//;s/-$//')
+echo "Deploy slug: $DEPLOY_SLUG"
+
 # Init git if needed
 [ ! -d .git ] && git init
 ```
@@ -85,18 +95,18 @@ Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>"
 TAGLINE=$(jq -r '.projects[] | select(.id == "<project-id>") | .tagline' ~/Code/exploratory/foundry/projects.json)
 
 # Create public repo and push
-gh repo create <project-id> --public --source=. --push --description "$TAGLINE"
+gh repo create $DEPLOY_SLUG --public --source=. --push --description "$TAGLINE"
 ```
 
 If the repo already exists:
 ```bash
-git remote add origin https://github.com/<username>/<project-id>.git 2>/dev/null || true
+git remote add origin https://github.com/<username>/$DEPLOY_SLUG.git 2>/dev/null || true
 git push -u origin main 2>/dev/null || git push -u origin master
 ```
 
 Capture the repo URL:
 ```bash
-REPO_URL=$(gh repo view <project-id> --json url -q '.url')
+REPO_URL=$(gh repo view $DEPLOY_SLUG --json url -q '.url')
 ```
 
 ### Step 4: Vercel Deployment
@@ -108,7 +118,21 @@ cd <project-dir>
 vercel link --yes
 
 # Deploy to production
-vercel --prod --yes
+DEPLOY_URL=$(vercel --prod --yes 2>&1 | grep -oE 'https://[^ ]+\.vercel\.app' | tail -1)
+echo "Raw deploy URL: $DEPLOY_URL"
+
+# Set human-readable alias (check availability first)
+CLEAN_URL="${DEPLOY_SLUG}.vercel.app"
+if curl -s -o /dev/null -w "%{http_code}" "https://$CLEAN_URL" | grep -q "404"; then
+  vercel alias set "$DEPLOY_URL" "$CLEAN_URL" 2>/dev/null && DEPLOY_URL="https://$CLEAN_URL" || true
+else
+  # Domain taken — try with -app suffix
+  CLEAN_URL="${DEPLOY_SLUG}-app.vercel.app"
+  if curl -s -o /dev/null -w "%{http_code}" "https://$CLEAN_URL" | grep -q "404"; then
+    vercel alias set "$DEPLOY_URL" "$CLEAN_URL" 2>/dev/null && DEPLOY_URL="https://$CLEAN_URL" || true
+  fi
+fi
+echo "Final deploy URL: $DEPLOY_URL"
 ```
 
 Capture the deployment URL from the output. If the deploy fails:
@@ -118,17 +142,41 @@ Capture the deployment URL from the output. If the deploy fails:
 4. Try once more after fixing
 5. If still failing, document the error and report
 
+### Step 4b: Disable Vercel Deployment Protection
+
+Vercel automatically enables SSO authentication on all new projects in this team. This must be disabled immediately after deployment so the site is publicly accessible.
+
+```bash
+# Get the Vercel auth token
+VERCEL_TOKEN=$(python3 -c "import json; print(json.load(open('/Users/aumvats/Library/Application Support/com.vercel.cli/auth.json'))['token'])")
+VERCEL_TEAM="team_zgOt9op8RAllTM2V2sRCBXu1"
+
+# Get the project ID from the .vercel/project.json created during deploy
+VERCEL_PROJECT_ID=$(jq -r '.projectId' <project-dir>/.vercel/project.json)
+
+# Disable ssoProtection (Vercel Authentication)
+curl -s -X PATCH "https://api.vercel.com/v9/projects/$VERCEL_PROJECT_ID?teamId=$VERCEL_TEAM" \
+  -H "Authorization: Bearer $VERCEL_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{"ssoProtection": null}'
+
+echo "Deployment protection disabled for $VERCEL_PROJECT_ID"
+```
+
+If this fails, the site will require Vercel login to visit — **do not mark deployment as successful without confirming this step passes**.
+
 ### Step 5: Update projects.json
 
 ```bash
 cd ~/Code/exploratory/foundry
 
 # Update the project entry
-jq '(.projects[] | select(.id == "<project-id>")) |= . + {
+jq --arg repo "$REPO_URL" --arg url "$DEPLOY_URL" --arg date "<today's date YYYY-MM-DD>" \
+  '(.projects[] | select(.id == "<project-id>")) |= . + {
   "status": "live",
-  "repo": "<REPO_URL>",
-  "live_url": "<DEPLOY_URL>",
-  "built_at": "<today's date YYYY-MM-DD>"
+  "repo": $repo,
+  "live_url": $url,
+  "built_at": $date
 }' projects.json > projects.json.tmp && mv projects.json.tmp projects.json
 ```
 
@@ -180,6 +228,7 @@ Write `DEPLOY-NOTES.md` in the project root:
 ## Deployment
 - GitHub repo: <URL> or ❌ failed
 - Vercel URL: <URL> or ❌ failed
+- Deployment protection disabled: ✅ / ❌
 - projects.json updated: ✅ / ❌
 - Factory repo pushed: ✅ / ❌
 
@@ -210,6 +259,7 @@ If the Vercel deploy needs env vars set in the dashboard:
 Deployment is complete when:
 1. GitHub repo is public and contains the code
 2. Vercel deployment is live and accessible
-3. `projects.json` shows status `"live"` with correct URLs
-4. Factory repo is pushed (portfolio updates)
-5. `DEPLOY-NOTES.md` is written with all statuses
+3. Deployment protection (ssoProtection) is disabled — site loads without Vercel login
+4. `projects.json` shows status `"live"` with correct URLs
+5. Factory repo is pushed (portfolio updates)
+6. `DEPLOY-NOTES.md` is written with all statuses

@@ -9,6 +9,12 @@
 
 set -e
 
+# Allow nested claude invocations (CLAUDECODE blocks them when run inside Claude Code)
+unset CLAUDECODE
+
+# Ensure Homebrew tools (flock, timeout) are in PATH for cron
+export PATH="/opt/homebrew/bin:$PATH"
+
 ROOT_DIR="$HOME/Code/exploratory"
 FACTORY_DIR="$ROOT_DIR/foundry"
 PROJECTS_JSON="$FACTORY_DIR/projects.json"
@@ -97,9 +103,19 @@ PROPOSAL_FILE="$LOG_DIR/rule-proposals-${TODAY}.md"
 if [ -f "$PROPOSAL_FILE" ]; then
   PROPOSAL_COUNT=$(grep -c "^###" "$PROPOSAL_FILE" 2>/dev/null || echo 0)
   ok "Evolver complete: $PROPOSAL_COUNT rule proposal(s) written to $PROPOSAL_FILE"
+  emit_event "evolver_complete" "proposals=$PROPOSAL_COUNT" "file=rule-proposals-${TODAY}.md"
+  if [ "$PROPOSAL_COUNT" -gt 0 ]; then
+    while IFS= read -r line; do
+      RULE_NAME=$(echo "$line" | sed 's/^### //' | cut -d: -f1)
+      emit_event "rule_proposed" "name=$RULE_NAME" "date=$TODAY"
+      append_history "✦" "RULE" "Proposed: $RULE_NAME"
+    done < <(grep "^### " "$PROPOSAL_FILE" 2>/dev/null)
+  fi
+  notify "Foundry — Evolver Done" "$PROPOSAL_COUNT new rule proposal(s) ready to review"
 else
   warn "Evolver did not write a proposals file"
   echo "EVOLVER_NO_OUTPUT $(date)" >> "$LOG_DIR/alerts.log"
+  notify "⚠️ Foundry — Evolver Failed" "No proposals file written. Check evolver.log." "urgent"
 fi
 
 log "Evolver done: $(date)"

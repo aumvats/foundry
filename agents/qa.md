@@ -58,6 +58,93 @@ For each API integration:
 - Inappropriate fallback behavior (returning stale data without warning)
 - Functions that fail without throwing or logging
 
+### Step 4.5: Production-Safety Scan (REQUIRED — fail QA if any check fails)
+
+Run each of the following scans. Any hit is a **blocking QA failure** — fix before proceeding.
+
+#### 4.5a — Hardcoded localhost URLs
+```bash
+grep -rn "localhost" src/ --include="*.ts" --include="*.tsx" --include="*.js" \
+  | grep -v "__tests__" | grep -v "\.test\." | grep -v "\.spec\."
+```
+Any match in non-test production code is a bug. Common pattern to fix: `|| "http://localhost:3000"` fallbacks in share links, API base URLs, or redirect targets. Replace with a proper `NEXT_PUBLIC_APP_URL` env var.
+
+#### 4.5b — Placeholder fallbacks in env var reads
+```bash
+grep -rn 'process\.env\.[A-Z_]\+\s*||\s*["'"'"'][^"'"'"']*["'"'"']' src/ \
+  --include="*.ts" --include="*.tsx" --include="*.js"
+```
+Look for patterns like:
+- `process.env.FOO || "placeholder"`
+- `process.env.SUPABASE_URL || "https://placeholder.supabase.co"`
+- `process.env.API_KEY || "your-key-here"`
+- `process.env.NEXT_PUBLIC_URL || "http://localhost:3000"`
+
+These silently corrupt production behavior. If an env var is required, throw an error when it's missing — never fall back to a known-bad string. Fix pattern:
+```ts
+const url = process.env.SUPABASE_URL;
+if (!url) throw new Error("SUPABASE_URL is required");
+```
+For client-side vars that must have a default, use an explicit, clearly-named constant — not a placeholder string.
+
+#### 4.5c — .env.local existence and completeness check
+```bash
+# Check .env.local exists
+ls -la .env.local 2>/dev/null || echo "MISSING"
+
+# If .env.example exists, find vars in example that are absent from .env.local
+comm -23 \
+  <(grep -oP '^[A-Z_]+(?==)' .env.example 2>/dev/null | sort) \
+  <(grep -oP '^[A-Z_]+(?==)' .env.local 2>/dev/null | sort)
+```
+**If `.env.local` is missing:** this is a blocker. The build may pass (TypeScript doesn't check runtime env), but the deployed app will be broken. Document it prominently in QA-REPORT.md under a "Deployment Blockers" section and set verdict to FAIL.
+
+**If `.env.local` has vars not in `.env.example`:** add the missing keys to `.env.example` with placeholder values so future developers know what's required.
+
+#### 4.5d — Silent API client initialization
+Scan `src/lib/` and `src/app/api/` for third-party clients initialized without credential validation:
+```bash
+grep -rn "new Twilio\|new Stripe\|createClient\|new SendGrid\|new Resend" src/ \
+  --include="*.ts" --include="*.tsx"
+```
+For each match, verify the surrounding code:
+- Does it check that required credentials exist before constructing the client?
+- If credentials are absent, does it throw an error immediately (not silently stub)?
+- Look for anti-patterns like:
+  ```ts
+  // BAD — silently stubs, callers have no idea it won't work
+  const client = apiKey ? new Twilio(sid, apiKey) : null;
+  if (client) { await client.messages.create(...) } // else: silently does nothing
+  ```
+  Fix by throwing early:
+  ```ts
+  // GOOD
+  if (!process.env.TWILIO_AUTH_TOKEN) throw new Error("TWILIO_AUTH_TOKEN is required");
+  const client = new Twilio(process.env.TWILIO_ACCOUNT_SID!, process.env.TWILIO_AUTH_TOKEN);
+  ```
+
+#### 4.5e — Environment variable consistency: code vs .env.example
+```bash
+# Extract all process.env.XXX references from source
+grep -roh 'process\.env\.[A-Z_][A-Z_0-9]*' src/ \
+  --include="*.ts" --include="*.tsx" --include="*.js" | \
+  grep -oP '[A-Z_][A-Z_0-9]*$' | sort -u
+
+# Compare against keys declared in .env.example
+grep -oP '^[A-Z_]+(?==)' .env.example 2>/dev/null | sort -u
+```
+Any `process.env.VAR_NAME` referenced in code but absent from `.env.example` must be added to `.env.example`. This is how future builds (and the deployer) know what secrets to provision.
+
+Add to QA-REPORT.md:
+```markdown
+## Deployment Blockers
+- [ ] .env.local present and complete
+- [ ] No localhost URLs in production paths
+- [ ] No placeholder fallbacks in env reads
+- [ ] All process.env.* references documented in .env.example
+- [ ] API clients validated (throw on missing creds, no silent stubs)
+```
+
 ### Step 5: Security Quick Check
 1. `grep -r "sk_live\|sk_test\|api_key.*=.*['\"]" src/` — no hardcoded secrets
 2. Verify `.env` is in `.gitignore`
@@ -124,6 +211,13 @@ Write `QA-REPORT.md` in the project root:
 - [ ] .env in .gitignore
 - [ ] Server keys not exposed to client
 
+## Deployment Blockers
+- [ ] `.env.local` present and all vars from `.env.example` populated
+- [ ] No `localhost` URLs in production code paths (src/, excluding tests)
+- [ ] No placeholder fallbacks (`|| "placeholder"`, `|| "https://placeholder.supabase.co"`, etc.)
+- [ ] All `process.env.XXX` references in src/ are documented in `.env.example`
+- [ ] API clients (Twilio, Stripe, Supabase, etc.) throw on missing credentials — no silent stubs
+
 ## Verdict
 **PASS** — ready for Designer agent
 or
@@ -135,6 +229,10 @@ or
 - **Build won't pass no matter what**: Document all errors. Write verdict as FAIL. The orchestrator will pause.
 - **Critical feature completely broken**: Fix what you can. If it's an architectural issue (wrong approach entirely), flag it — don't rewrite the feature.
 - **Missing dependencies or APIs**: Install missing deps. If an API is down, verify the URL is correct. If it's genuinely down, note it.
+- **Missing .env.local**: Write verdict as FAIL. List every missing var in the Deployment Blockers section. The app will appear to build successfully but will be broken at runtime — this is a critical production failure, not a minor note.
+- **Placeholder fallbacks found**: Fix them by converting to early-throw patterns. If a var is genuinely optional, document why and use a clearly named constant — not a string that looks like a real value.
+- **Hardcoded localhost URLs**: Fix by using the appropriate env var (`NEXT_PUBLIC_APP_URL`, `NEXT_PUBLIC_SUPABASE_URL`, etc.). Never leave localhost fallbacks in share links, redirect targets, or API base URLs.
+- **Silent API stubs**: Fix by adding an explicit check and throw before the client is constructed. Do not leave code that silently does nothing when credentials are absent.
 
 ## Success Criteria
 
@@ -142,5 +240,6 @@ QA passes when:
 1. `npm run build` exits 0
 2. All routes render without crashes
 3. No hardcoded secrets found
-4. QA-REPORT.md written with accurate status
-5. Verdict is PASS (or clearly documented FAIL with reasons)
+4. All Step 4.5 production-safety scans pass (no localhost URLs, no placeholder fallbacks, .env.local present and complete, no silent API stubs, all env vars documented)
+5. QA-REPORT.md written with accurate status including Deployment Blockers section
+6. Verdict is PASS (or clearly documented FAIL with reasons)

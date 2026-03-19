@@ -14,6 +14,12 @@
 
 set -e
 
+# Allow nested claude invocations (CLAUDECODE blocks them when run inside Claude Code)
+unset CLAUDECODE
+
+# Ensure Homebrew tools (flock, timeout) are in PATH for cron
+export PATH="/opt/homebrew/bin:$PATH"
+
 # ── CONFIG ───────────────────────────────────────────────────────────────────
 ROOT_DIR="$HOME/Code/exploratory"
 FACTORY_DIR="$ROOT_DIR/foundry"
@@ -26,6 +32,10 @@ source "$FACTORY_DIR/lib/state.sh"
 source "$FACTORY_DIR/lib/report.sh"
 
 mkdir -p "$LOG_DIR"
+
+BUILD_RUN_LOG="$LOG_DIR/build-run-$(date +%Y%m%d-%H%M%S).log"
+exec > >(tee -a "$BUILD_RUN_LOG") 2>&1
+ls -t "$LOG_DIR"/build-run-*.log 2>/dev/null | tail -n +15 | xargs rm -f 2>/dev/null || true
 
 # ── COLORS ───────────────────────────────────────────────────────────────────
 RED='\033[0;31m'
@@ -62,6 +72,7 @@ log "Pre-flight checks..."
 # Auth check
 if ! claude --print -p "echo AUTHCHECK" 2>&1 | grep -q "AUTHCHECK"; then
   echo "AUTH FAILED $(date)" >> "$LOG_DIR/alerts.log"
+  notify "⚠️ Foundry — Auth Failed" "Claude CLI auth check failed. Build pipeline aborted." "urgent"
   fail "Claude CLI auth check failed"
 fi
 
@@ -71,6 +82,20 @@ for dep in jq gh node npm; do
 done
 
 ok "Pre-flight checks passed"
+
+# ── STALE PROJECT SCAN ────────────────────────────────────────────────────────
+CUTOFF=$(date -v-7d +%Y-%m-%d 2>/dev/null || date -d '7 days ago' +%Y-%m-%d 2>/dev/null)
+STALE=$(jq -r --arg cutoff "$CUTOFF" '
+  .projects[] |
+  select(.status == "needs_review" or .status == "needs_spec_revision") |
+  select(.created_at <= $cutoff) |
+  .id
+' "$PROJECTS_JSON" 2>/dev/null)
+if [ -n "$STALE" ]; then
+  STALE_NAMES=$(echo "$STALE" | while read -r sid; do get_project_field "$sid" ".name"; done | tr '\n' ', ' | sed 's/,$//')
+  warn "Stale projects (>7 days in stuck state): $STALE_NAMES"
+  notify "⚠️ Foundry — Stale Projects" "Projects stuck >7 days: $STALE_NAMES" "urgent"
+fi
 
 # ── DETERMINE PROJECTS TO BUILD ───────────────────────────────────────────────
 if [ -n "$SPECIFIC_PROJECT" ]; then
@@ -86,11 +111,27 @@ else
     exit 0
   fi
   log "Queued projects: $(echo "$PROJECTS_TO_BUILD" | tr '\n' ' ')"
+  emit_event "build_run_started" "projects=$(echo "$PROJECTS_TO_BUILD" | tr '\n' ',' | sed 's/,$//')"
 fi
 
 # ── RUN BUILD PIPELINE ───────────────────────────────────────────────────────
 BUILT_COUNT=0
 FAILED_COUNT=0
+
+# ── RETRY STUCK DEPLOYS ───────────────────────────────────────────────────────
+STUCK_BUILT=$(projects_by_status "built")
+if [ -n "$STUCK_BUILT" ]; then
+  log "Found projects stuck in 'built' — retrying deploy..."
+  while IFS= read -r stuck_id; do
+    [ -z "$stuck_id" ] && continue
+    log "Retrying deploy for $stuck_id"
+    if "$FACTORY_DIR/approve.sh" "$stuck_id" --yes; then
+      ok "$stuck_id deployed on retry"
+    else
+      warn "$stuck_id deploy retry failed — check logs"
+    fi
+  done <<< "$STUCK_BUILT"
+fi
 
 while IFS= read -r project_id; do
   [ -z "$project_id" ] && continue
@@ -121,11 +162,19 @@ while IFS= read -r project_id; do
 
   # Run build pipeline
   if "$FACTORY_DIR/build-project.sh" "$project_id"; then
-    ok "$project_id build complete → status: built"
+    ok "$project_id build complete → auto-deploying"
     BUILT_COUNT=$((BUILT_COUNT + 1))
+    # Auto-deploy: no manual approval needed if build passed
+    if "$FACTORY_DIR/approve.sh" "$project_id" --yes; then
+      ok "$project_id deployed successfully"
+    else
+      warn "$project_id deploy failed — project is built, retry: ./approve.sh $project_id"
+      notify "⚠️ Foundry — Deploy Failed" "$project_id built but deploy failed. Run: ./approve.sh $project_id" "urgent"
+    fi
   else
     warn "$project_id build failed or paused"
     FAILED_COUNT=$((FAILED_COUNT + 1))
+    notify "⚠️ Foundry — Build Paused" "$project_id pipeline paused. Run: ./build-project.sh $project_id --resume-from <agent>" "urgent"
   fi
 
 done <<< "$PROJECTS_TO_BUILD"
@@ -133,6 +182,7 @@ done <<< "$PROJECTS_TO_BUILD"
 # ── POST-RUN REPORT ───────────────────────────────────────────────────────────
 echo -e "\n${BOLD}══════════════════════════════════════════════════════════${NC}"
 log "Run complete: $BUILT_COUNT built, $FAILED_COUNT failed/paused"
+emit_event "build_run_complete" "built=$BUILT_COUNT" "failed=$FAILED_COUNT"
 echo -e "${BOLD}══════════════════════════════════════════════════════════${NC}\n"
 
 REPORT_FILE=$(generate_daily_report)
@@ -140,5 +190,13 @@ ok "Daily report written: $REPORT_FILE"
 
 SUMMARY_FILE=$(generate_history_summary)
 ok "History summary written: $SUMMARY_FILE"
+
+# Compose deploy queue for notification
+DEPLOY_QUEUE=$(jq -r '[.projects[] | select(.status=="built") | .name] | join(", ")' "$PROJECTS_JSON" 2>/dev/null | sed 's/PROJECT-[0-9]* — //g' | cut -c1-80)
+if [ "$FAILED_COUNT" -eq 0 ]; then
+  notify "Foundry — Builds Complete ✅" "$BUILT_COUNT built. Ready to deploy: $DEPLOY_QUEUE" 
+else
+  notify "⚠️ Foundry — Run Done (issues)" "$BUILT_COUNT built, $FAILED_COUNT failed/paused. Check dashboard." "urgent"
+fi
 
 cat "$REPORT_FILE"

@@ -59,3 +59,6 @@ For every issue raised by the Critic, document what changed and why.
 4. **Section 5 values stay exact.** If you change the design, use real hex codes, real px values, real ms timings — no approximations.
 5. **The self-scores in REFINEMENT-LOG.md must be honest.** These get compared against the Validator's checklist. If you give yourself 8/10 on Technical but left unverified APIs, the Validator will catch it.
 6. **No TODO/TBD/placeholder** in either output file.
+7. **Before writing your final output, run through the Validator's mechanical checklist yourself.** The two checks that most commonly cause `needs_review` failures are:
+   - **section5_all_colors_are_hex**: Every single color value in Section 5 must be an exact hex code like `#1E3A5F`. Color names (`navy`, `gray-800`), Tailwind class names, CSS variable names, and descriptions like "warm gray" are NOT valid. If you wrote any of these, replace them with `#RRGGBB` hex values before finishing.
+   - **section3_apis_have_auth_and_limits**: Every API listed in Section 3 must explicitly state its auth method (e.g., "Auth: None", "Auth: API Key") AND its rate limits (e.g., "Rate limits: 1000 req/day", "Rate limits: Unlimited"). Missing either field will fail validation. Check every API entry before finishing.

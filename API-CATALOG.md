@@ -6,6 +6,16 @@
 > **Last verified:** 2026-03-17
 > **Health check log:** `logs/api-health-YYYY-MM-DD.md` (updated weekly by api-health-check.sh)
 
+## ⛔ Hard Constraint — No Credit Card Required
+
+**All products built by this factory must run entirely on free APIs with no credit card required.**
+
+- **Auth: None** = best choice — no signup, no key, works immediately
+- **API Key** = allowed only if key is obtainable with email signup, no CC
+- **⚠️ CC-risk** = annotated below — avoid unless confirmed CC-free
+
+**Never use:** Twilio (SMS), SendGrid/Mailgun (transactional email), Stripe, or any API whose signup page shows a credit card field.
+
 ---
 
 ## ⚠️ Already Used — Do Not Duplicate Core Mechanism
@@ -114,7 +124,7 @@ These APIs are already the backbone of existing factory projects. Fine to combin
 | FoodData Central (USDA) | `https://api.nal.usda.gov/fdc/v1` | API Key | Free | Comprehensive nutrition database — 600k+ foods |
 | Nutritionix | `https://trackapi.nutritionix.com/v2` | API Key | Free tier | Natural language → nutrition data ("2 slices of pizza") |
 | Open Food Facts | `https://world.openfoodfacts.org/api/v0` | None | Unknown | Barcode → food nutrition data (crowdsourced) |
-| Infermedica | `https://api.infermedica.com/v3` | API Key | Free tier | Symptom checker + triage + medical NLP |
+| Infermedica | `https://api.infermedica.com/v3` | API Key | Free tier | ⚠️ CC-risk — medical API, verify CC-free before use |
 
 ---
 
@@ -162,7 +172,7 @@ These APIs are already the backbone of existing factory projects. Fine to combin
 | HaveIBeenPwned | `https://haveibeenpwned.com/api/v3` | API Key | 10 req/min free | Check if email/password exposed in breaches |
 | EmailRep | `https://emailrep.io` | None (or API Key for higher) | 100 req/day free | Email threat score — spam, phishing, reputation |
 | FraudLabs Pro | `https://api.fraudlabspro.com/v1` | API Key | 500 req/month free | Fraud detection for orders — IP, email, billing |
-| Shodan | `https://api.shodan.io` | API Key | Free tier limited | Internet-connected device search + exposure check |
+| Shodan | `https://api.shodan.io` | API Key | Free tier limited | ⚠️ CC-risk — avoid unless confirmed CC-free |
 
 ---
 
@@ -174,7 +184,7 @@ These APIs are already the backbone of existing factory projects. Fine to combin
 | Wikipedia (MediaWiki) | `https://en.wikipedia.org/w/api.php` | None | Unknown | Article summaries, search, page data |
 | Wikidata | `https://www.wikidata.org/w/api.php` | None | Unknown | Structured knowledge base — entities, facts, relationships |
 | Nobel Prize | `https://api.nobelprize.org/2.1` | None | Unknown | All Nobel prizes, laureates, categories since 1901 |
-| OpenSanctions | `https://api.opensanctions.org` | None | Unknown | Sanctions lists, PEP data, financial crime watchlists |
+| OpenSanctions | `https://api.opensanctions.org` | API Key (free tier available, email signup, no CC) | 500 req/day free tier | Sanctions lists, PEP data, financial crime watchlists — requires `Authorization: ApiKey <key>` header |
 | US Census Bureau | `https://api.census.gov/data` | API Key | Free | US demographic, economic, geographic census data |
 
 ---
@@ -231,7 +241,7 @@ These APIs are already the backbone of existing factory projects. Fine to combin
 | TheMealDB | `https://www.themealdb.com/api/json/v1/1` | None | Unknown | Recipes + ingredients + instructions + images |
 | Open Food Facts | `https://world.openfoodfacts.org/api/v0` | None | Unknown | Barcode scan → full nutrition + ingredients |
 | The Cocktail DB | `https://www.thecocktaildb.com/api/json/v1/1` | None | Unknown | Cocktail recipes, ingredients, glass types |
-| Tasty (Rapidapi) | Via RapidAPI | API Key | 500 req/month free tier | Recipes from BuzzFeed Tasty |
+| Tasty (Rapidapi) | Via RapidAPI | API Key | 500 req/month free tier | ⚠️ RapidAPI requires CC — avoid |
 
 ---
 

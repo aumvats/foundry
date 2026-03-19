@@ -40,9 +40,27 @@ If you found no patterns worth proposing, write:
 No patterns meeting the threshold were found today.
 ```
 
+## High-Priority Pattern Categories to Watch
+
+When scanning today's QA reports, builder notes, and logs, specifically look for these recurring anti-patterns. Even a single occurrence of items marked (1-occurrence) warrants a medium-confidence proposal because they consistently cause silent production failures:
+
+### Env Var & Configuration Anti-Patterns
+- **Hardcoded localhost URLs** — any `localhost:PORT` appearing in non-test production code (`src/` excluding `*.test.*`, `*.spec.*`, `__tests__/`). Look for it in share links, redirect targets, API base URLs. Example pattern: `|| "http://localhost:3000"`. Propose a builder rule to always use `process.env.NEXT_PUBLIC_APP_URL` instead. (1-occurrence threshold — always silent in production)
+- **Placeholder fallbacks** — `process.env.FOO || "placeholder"`, `|| "https://placeholder.supabase.co"`, `|| "your-key-here"`, `|| "sk_test_xxx"`. These make the build pass but silently corrupt runtime behavior. Propose a builder rule requiring early-throw pattern instead of fallback strings. (1-occurrence threshold)
+- **Missing .env.local documentation** — if a project deployed without a complete `.env.local` and the QA report doesn't explicitly call it out as a Deployment Blocker, propose a QA rule to treat missing `.env.local` as a hard FAIL.
+- **Undocumented env vars** — `process.env.VAR_NAME` references in source code that have no corresponding entry in `.env.example`. These create invisible requirements that break future deployments.
+- **Silent API client stubs** — a third-party client (Twilio, Stripe, Supabase, Resend) constructed conditionally on credential presence, with callers that silently no-op when the client is null. Example: `const twilio = sid && token ? new Twilio(sid, token) : null`. Propose a builder rule requiring early-throw validation before client construction.
+
+### Identify Missed QA Checks
+If a production issue (broken share links, broken auth, silent SMS failures) is traced back to a pattern that the QA agent ran on but didn't catch, always propose:
+1. A new check for the **QA agent** (Step 4.5 or Security section)
+2. A preventative rule for the **builder agent** to avoid the pattern in the first place
+
+Both rules count as one "pattern occurrence" — propose both together.
+
 ## Rules for Proposing
 
-1. **Minimum 2 occurrences** before proposing. A single failure is noise. Two failures in one day is a pattern.
+1. **Minimum 2 occurrences** before proposing. A single failure is noise. Two failures in one day is a pattern. **Exception:** env var and URL anti-patterns listed in "High-Priority Pattern Categories" above may be proposed after 1 occurrence due to their consistently silent production impact.
 2. **Never propose a rule that exists in `agents/rules.json` with `"active": true`.** Check before proposing.
 3. **Never check or modify `agents/rules.json` directly.** The operator reviews proposals and activates them manually.
 4. **Each `append_to_prompt` must be a complete, standalone instruction.** An agent reading only that sentence must know what to do. Example of bad: "Don't do what was wrong before." Example of good: "If a user flow requires more than 3 steps before the user sees output, redesign the flow to show intermediate results after step 1."

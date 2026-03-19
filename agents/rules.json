@@ -1,4 +1,104 @@
 {
   "version": 1,
-  "rules": []
+  "rules": [
+    {
+      "id": "free-api-economics-check",
+      "agent": "ideator",
+      "active": true,
+      "added": "2026-03-17",
+      "source": "evolver",
+      "occurrences": 2,
+      "confidence": "high",
+      "append_to_prompt": "Before finalizing a spec, calculate the API cost per user at each pricing tier. For every external API the product depends on: find the free-tier rate limit, estimate how many API calls one paying user generates per month, and compute how many users exhaust the free tier. If a single paid subscriber's API usage exceeds the free-tier limit, the spec MUST either (a) include a paid API tier in the cost model with pricing that covers it, or (b) choose a different API with sufficient free-tier headroom. Never propose a $19/mo product that requires a $449/mo API plan to serve one customer."
+    },
+    {
+      "id": "avoid-saturated-markets-with-inferior-stack",
+      "agent": "ideator",
+      "active": true,
+      "added": "2026-03-17",
+      "source": "evolver",
+      "occurrences": 2,
+      "confidence": "high",
+      "append_to_prompt": "Before proposing a product idea, search for 3 existing competitors in the same space. If established competitors exist with 3+ years of traction, do NOT propose a product that uses free-tier APIs to replicate their core capability — free APIs will always deliver an inferior version of what competitors built proprietary infrastructure for. Instead, either (a) find an underserved niche with no established players, (b) combine APIs in a novel way that creates a capability no single competitor offers, or (c) target a workflow adjacent to the saturated market rather than competing head-on."
+    },
+    {
+      "id": "free-apis-only-no-credit-card",
+      "agent": "ideator",
+      "active": true,
+      "added": "2026-03-17",
+      "source": "operator",
+      "confidence": "absolute",
+      "append_to_prompt": "HARD CONSTRAINT: Every API used in this product must be completely free with no credit card required — ever. This means: (1) Strongly prefer APIs with Auth: None in API-CATALOG.md — no signup, no key, no account needed. (2) APIs with 'API Key' are only allowed if the key can be obtained with an email signup and no credit card. Forbidden API categories: SMS (Twilio), transactional email (SendGrid, Mailgun), payment processing (Stripe), and any API whose free tier page shows a credit card field. (3) The entire product — including all free and paid user tiers — must work within the free rate limits of every API it uses. No feature may require a paid API plan to function. (4) If you are unsure whether an API requires a credit card, do NOT use it. Choose a different API with confirmed free access. This constraint cannot be overridden."
+    },
+    {
+      "id": "auth-email-password-only",
+      "agent": "builder",
+      "active": true,
+      "added": "2026-03-19",
+      "source": "operator",
+      "confidence": "absolute",
+      "append_to_prompt": "HARD CONSTRAINT: Auth must be email + password only. Never implement Google OAuth, GitHub OAuth, magic links, passwordless email, or any other third-party sign-in method. Use Supabase `signInWithPassword` and `signUp` for all auth. The sign-in UI must have exactly: an email field, a password field, a submit button, and a toggle between sign-in and sign-up. No OAuth buttons, no 'send me a magic link', no 'continue with Google'. If the spec mentions OAuth or magic links, ignore those requirements and implement email+password instead."
+    },
+    {
+      "id": "builder-log-all-catch-blocks",
+      "agent": "builder",
+      "active": true,
+      "added": "2026-03-19",
+      "source": "evolver",
+      "confidence": "high",
+      "append_to_prompt": "Never leave a catch block empty or with only a comment. Every catch block must either (a) log the error (e.g., console.error(err)), (b) re-throw it, or (c) explicitly handle it and explain why swallowing it is safe via an inline comment. An empty catch silently discards errors and makes debugging impossible. If swallowing is intentional (e.g., optional feature that degrades gracefully), write: `catch (err) { /* storage unavailable — feature disabled */ }` with a descriptive reason. For user-facing errors, surface them in state or UI rather than swallowing them."
+    },
+    {
+      "id": "localstorage-isolate-writes",
+      "agent": "builder",
+      "active": true,
+      "added": "2026-03-19",
+      "source": "evolver",
+      "occurrences": 2,
+      "confidence": "high",
+      "append_to_prompt": "Always isolate localStorage.setItem() in its own inner try/catch block, separate from any outer try block that performs fetching or computation. localStorage can throw QuotaExceededError (storage full) or SecurityError (Safari private mode). If you write `try { const data = await fetch(...); localStorage.setItem(key, JSON.stringify(data)); return data; } catch { return null; }`, a storage failure will discard the successfully fetched data. Instead write: `try { const data = await fetch(...); try { localStorage.setItem(key, JSON.stringify(data)); } catch { /* storage failed, data still valid */ } return data; } catch { return null; }`."
+    },
+    {
+      "id": "check-response-ok-before-json",
+      "agent": "builder",
+      "active": true,
+      "added": "2026-03-19",
+      "source": "evolver",
+      "occurrences": 4,
+      "confidence": "high",
+      "append_to_prompt": "After every fetch() call, always check `res.ok` BEFORE calling `res.json()`. If the response is not OK, read `res.status` and `res.statusText` for the error message — do not attempt to parse the body as JSON since it may be HTML. Pattern: `const res = await fetch(url); if (!res.ok) throw new Error(`API error: ${res.status} ${res.statusText}`); const data = await res.json();`. Additionally, some APIs (ipapi.co, GitHub, etc.) return HTTP 200 with an error payload like `{error: true}`. After parsing JSON, check for error fields in the response data before using it: `if (data.error) throw new Error(data.reason || 'API returned error');`."
+    },
+    {
+      "id": "builder-utc-local-date-consistency",
+      "agent": "builder",
+      "active": true,
+      "added": "2026-03-19",
+      "source": "evolver",
+      "confidence": "high",
+      "append_to_prompt": "Never mix UTC and local date methods on the same Date object within the same logical operation. Methods like getUTCDate(), getUTCMonth(), getUTCFullYear() and getDate(), getMonth(), getFullYear() return different values for users outside UTC. Pick one convention per feature and use it consistently: prefer UTC methods (getUTC*) for data storage, API calls, and comparisons; prefer local methods (get* without UTC) only for display. If you use getUTCDate() to read a value, use setUTCDate() to write it back — never mix the two in the same date arithmetic chain."
+    },
+    {
+      "id": "builder-verify-animation-classes",
+      "agent": "builder",
+      "active": true,
+      "added": "2026-03-19",
+      "source": "evolver",
+      "confidence": "high",
+      "append_to_prompt": "Before applying a CSS class via JavaScript (e.g., element.classList.add('animate-bounce')), verify that the class is actually defined in the stylesheet, Tailwind config, or CSS module being used. Applying a non-existent animation class fails silently — no error is thrown, the element just doesn't animate. When adding animation classes dynamically: (a) use only classes you can confirm exist in the project's CSS, (b) if using Tailwind, ensure the class is in the safelist or statically present in source so it isn't purged, and (c) test the animation in the browser before finalizing."
+    }
+  ],
+  "pipeline_rules": [
+    {
+      "id": "auto-deploy-on-clean-build",
+      "added": "2026-03-18",
+      "source": "operator",
+      "description": "After every successful build (all 5 agents pass + npm run build clean), automatically deploy to GitHub + Vercel without waiting for manual approval. No human gate needed if there are no build failures."
+    },
+    {
+      "id": "queued-projects-build-independently",
+      "added": "2026-03-18",
+      "source": "operator",
+      "description": "needs_review or other blocked projects do not block queued projects. Orchestrate.sh always picks up all queued projects regardless of other projects' states."
+    }
+  ]
 }

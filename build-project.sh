@@ -46,6 +46,12 @@
 
 set -e
 
+# Allow nested claude invocations (CLAUDECODE blocks them when run inside Claude Code)
+unset CLAUDECODE
+
+# Ensure Homebrew tools (flock, timeout) are in PATH for cron
+export PATH="/opt/homebrew/bin:$PATH"
+
 # ── CONFIG ──────────────────────────────────────────────────────────────────
 ROOT_DIR="$HOME/Code/exploratory"
 FACTORY_DIR="$ROOT_DIR/foundry"
@@ -62,6 +68,8 @@ MAX_RETRIES=2
 
 # Lock file for projects.json concurrent writes
 LOCK_FILE="$FACTORY_DIR/.projects.lock"
+
+source "$FACTORY_DIR/lib/state.sh"
 
 # ── COLORS ──────────────────────────────────────────────────────────────────
 RED='\033[0;31m'
@@ -143,6 +151,7 @@ STATE_FILE="$STATE_DIR/${PROJECT_ID}-state.json"
 # ── READ PROJECT INFO ───────────────────────────────────────────────────────
 PROJECT_NAME=$(jq -r ".projects[] | select(.id == \"$PROJECT_ID\") | .name" "$PROJECTS_JSON" 2>/dev/null || echo "$PROJECT_ID")
 SPEC_BASENAME=$(basename "$SPEC_FILE")
+BUILD_ISSUE_ID=$(get_project_field "$PROJECT_ID" ".linear.build_issue_id // empty")
 
 echo -e "\n${BOLD}╔══════════════════════════════════════════════════════════╗${NC}"
 echo -e "${BOLD}║     FOUNDRY — Multi-Agent Build Pipeline     ║${NC}"
@@ -177,7 +186,8 @@ init_state() {
   },
   "errors": [],
   "paused": false,
-  "pause_reason": ""
+  "pause_reason": "",
+  "agent_timings": {}
 }
 EOF
 }
@@ -249,6 +259,7 @@ When done, make sure npm run build passes (if applicable to your role)."
   while [ $attempt -le $MAX_RETRIES ] && [ "$success" = false ]; do
     agent "Attempt $attempt/$MAX_RETRIES for $agent_name..."
 
+    unset CLAUDECODE
     timeout "$AGENT_TIMEOUT" claude \
       --dangerously-skip-permissions \
       --model "$(agent_model "$agent_name")" \
@@ -310,6 +321,11 @@ fi
 # ── UPDATE STATUS → building ──────────────────────────────────────────────
 step "Step 0: Initialize build"
 write_projects_json "(.projects[] | select(.id == \"$PROJECT_ID\") | .status) = \"building\""
+emit_event "build_started" "project_id=$PROJECT_ID" "project_name=$PROJECT_NAME"
+append_history "🔨" "BUILDING" "$PROJECT_NAME"
+linear_update_state "$BUILD_ISSUE_ID" "In Progress" || true
+LINEAR_PROJECT_ID=$(get_project_field "$PROJECT_ID" ".linear.project_id // empty")
+linear_post_update "$LINEAR_PROJECT_ID" "🔨 **Build pipeline started**\n\nRunning 5 agents in sequence: Planner → Builder → QA → Designer → Optimizer" "onTrack" || true
 
 # Initialize or load state
 if [ -n "$RESUME_FROM" ]; then
@@ -336,12 +352,32 @@ for agent_name in "${PIPELINE_AGENTS[@]}"; do
 
   step "Agent: $agent_name"
 
+  _agent_start=$(date +%s)
   if ! run_agent "$agent_name"; then
+    _agent_end=$(date +%s)
+    _agent_dur=$((_agent_end - _agent_start))
+    emit_event "agent_failed" "project_id=$PROJECT_ID" "agent=$agent_name"
+    linear_update_state "$BUILD_ISSUE_ID" "In Review" || true
+    linear_add_comment "$BUILD_ISSUE_ID" "⚠️ Paused: **$agent_name** failed after $MAX_RETRIES attempts (${_agent_dur}s)" || true
     PIPELINE_FAILED=true
     pause_project "$agent_name agent failed after $MAX_RETRIES attempts"
     warn "Pipeline paused at $agent_name"
     break
   fi
+  _agent_end=$(date +%s)
+  _agent_dur=$((_agent_end - _agent_start))
+  emit_event "agent_complete" "project_id=$PROJECT_ID" "agent=$agent_name" "duration_secs=$_agent_dur"
+  write_projects_json "(.projects[] | select(.id == \"$PROJECT_ID\") | .agent_timings.$agent_name) = $_agent_dur"
+  linear_add_comment "$BUILD_ISSUE_ID" "✓ **$agent_name** complete (${_agent_dur}s)" || true
+  case "$agent_name" in
+    planner)   _agent_msg="✅ **Planner complete** (${_agent_dur}s) — architecture plan and file structure ready" ;;
+    builder)   _agent_msg="✅ **Builder complete** (${_agent_dur}s) — full codebase generated" ;;
+    qa)        _agent_msg="✅ **QA complete** (${_agent_dur}s) — tests passing, build verified" ;;
+    designer)  _agent_msg="✅ **Designer complete** (${_agent_dur}s) — UI polished and refined" ;;
+    optimizer) _agent_msg="✅ **Optimizer complete** (${_agent_dur}s) — performance tuned, final build clean" ;;
+    *)         _agent_msg="✅ **${agent_name} complete** (${_agent_dur}s)" ;;
+  esac
+  linear_post_update "$LINEAR_PROJECT_ID" "$_agent_msg" "onTrack" || true
 
   # After Builder, verify build passes before continuing
   if [ "$agent_name" = "builder" ] || [ "$agent_name" = "qa" ]; then
@@ -363,6 +399,9 @@ done
 if [ "$PIPELINE_FAILED" = true ]; then
   # Update status to indicate it needs attention
   write_projects_json "(.projects[] | select(.id == \"$PROJECT_ID\") | .status) = \"paused\""
+  emit_event "build_paused" "project_id=$PROJECT_ID" "agent=$agent_name" "reason=agent failed after retries"
+  append_history "⏸" "PAUSED" "$PROJECT_NAME — paused at $agent_name"
+  linear_post_update "$LINEAR_PROJECT_ID" "⚠️ **Build paused** at ${agent_name}\n\n**Reason:** ${agent_name} failed after ${MAX_RETRIES} attempts\n\n**To resume:** \`./build-project.sh ${PROJECT_ID} --resume-from ${agent_name}\`" "atRisk" || true
 
   echo -e "\n${BOLD}╔══════════════════════════════════════════════════════════╗${NC}"
   echo -e "${BOLD}║           PIPELINE PAUSED — NEEDS ATTENTION             ║${NC}"
@@ -399,7 +438,23 @@ fi
 
 # Pipeline succeeded — update status to "built" and pause for deploy approval
 write_projects_json "(.projects[] | select(.id == \"$PROJECT_ID\") | .status) = \"built\""
+emit_event "build_complete" "project_id=$PROJECT_ID" "project_name=$PROJECT_NAME"
+append_history "✅" "BUILT" "$PROJECT_NAME — all 5 agents passed"
 update_step "deployer" "awaiting_approval" "" ""
+linear_post_update "$LINEAR_PROJECT_ID" "🏗️ **Build complete** — all 5 agents passed\n\nAuto-deploying to GitHub + Vercel now..." "onTrack" || true
+
+# Linear: Build → Done, create Deploy issue, link and assign to project
+linear_update_state "$BUILD_ISSUE_ID" "Done" || true
+_DEPLOY_ISSUE_ID=$(linear_create_issue "${PROJECT_NAME} — Deploy" \
+  "Build complete. All 5 agents passed. Auto-deploying to GitHub + Vercel." \
+  "Todo" "Deploy") || _DEPLOY_ISSUE_ID=""
+linear_assign_to_project "$_DEPLOY_ISSUE_ID" "$LINEAR_PROJECT_ID" || true
+if [ -n "${BUILD_ISSUE_ID:-}" ] && [ -n "${_DEPLOY_ISSUE_ID:-}" ]; then
+  linear_link_issues "$BUILD_ISSUE_ID" "$_DEPLOY_ISSUE_ID" || true
+fi
+if [ -n "${_DEPLOY_ISSUE_ID:-}" ]; then
+  write_projects_json "(.projects[] | select(.id == \"$PROJECT_ID\") | .linear.deploy_issue_id) = \"$_DEPLOY_ISSUE_ID\""
+fi
 
 echo -e "\n${BOLD}╔══════════════════════════════════════════════════════════╗${NC}"
 echo -e "${BOLD}║           BUILD COMPLETE — AWAITING DEPLOY APPROVAL     ║${NC}"
