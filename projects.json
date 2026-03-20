@@ -334,19 +334,26 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "parallel_queued",
+      "status": "live",
       "spec_dir": "project-1773903417",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/pricemap",
+      "live_url": "https://pricemap-app.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-19",
-      "built_at": "",
+      "built_at": "2026-03-20",
       "deployed_at": "",
-      "build_attempts": 0,
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 72,
         "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 195,
+        "builder": 718,
+        "qa": 666,
+        "designer": 535,
+        "optimizer": 641
       }
     },
     {
