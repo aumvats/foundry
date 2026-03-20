@@ -167,15 +167,15 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "queued",
+      "status": "live",
       "spec_dir": "project-1773814327",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/rateradar",
+      "live_url": "https://rateradar-app.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-18",
-      "built_at": "",
-      "deployed_at": "",
-      "build_attempts": 0,
+      "built_at": "2026-03-20",
+      "deployed_at": "2026-03-20",
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 70,
@@ -184,6 +184,13 @@
       "linear": {
         "spec_issue_id": "20c6e571-8f1d-4120-bacf-e5160d31f1b1",
         "project_id": "945043aa-7632-4918-abb6-708f55ab0d2a"
+      },
+      "agent_timings": {
+        "planner": 146,
+        "builder": 660,
+        "qa": 670,
+        "designer": 914,
+        "optimizer": 512
       }
     },
     {
@@ -348,6 +355,52 @@
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 70,
+        "ran_refiner": false
+      }
+    },
+    {
+      "id": "project-1773981660",
+      "name": "SafePlate — Product Specification",
+      "tagline": "SafePlate lets food service businesses build a complete allergen matrix for their menu in minutes. E",
+      "description": "SafePlate lets food service businesses build a complete allergen matrix for their menu in minutes. Enter your dishes and ingredients — SafePlate flags all FDA Big 9 allergens (milk, eggs, fish, shellfish, tree nuts, peanuts, wheat, soybeans, sesame), tags dietary compatibility (vegan, vegetarian, ",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1773981660",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-20",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 35,
+        "ran_refiner": true
+      }
+    },
+    {
+      "id": "project-1773988092",
+      "name": "ClimateDrift — Product Specification",
+      "tagline": "ClimateDrift turns 80 years of granular historical weather data into instant, location-specific clim",
+      "description": "ClimateDrift turns 80 years of granular historical weather data into instant, location-specific climate trend reports. Enter any address — see how temperature, precipitation, wind, and extreme weather events have shifted decade-over-decade at that exact spot. Enterprise climate risk tools (Jupiter",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1773988092",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-20",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 37,
         "ran_refiner": false
       }
     }
