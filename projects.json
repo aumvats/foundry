@@ -371,7 +371,7 @@
       "vercel_project": "",
       "created_at": "2026-03-19",
       "built_at": "2026-03-20",
-      "deployed_at": "",
+      "deployed_at": "2026-03-20",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
@@ -394,7 +394,7 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "queued",
+      "status": "paused",
       "spec_dir": "project-1773981660",
       "repo": "",
       "live_url": "",
@@ -402,11 +402,16 @@
       "created_at": "2026-03-20",
       "built_at": "",
       "deployed_at": "",
-      "build_attempts": 0,
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:REWRITE",
         "total_score": 35,
         "ran_refiner": true
+      },
+      "agent_timings": {
+        "planner": 192,
+        "builder": 796,
+        "qa": 601
       }
     },
     {
@@ -417,7 +422,7 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "parallel_queued",
+      "status": "built",
       "spec_dir": "project-1773988092",
       "repo": "",
       "live_url": "",
@@ -430,6 +435,101 @@
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 37,
         "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 162,
+        "builder": 1038,
+        "qa": 663,
+        "designer": 849,
+        "optimizer": 514
+      }
+    },
+    {
+      "id": "project-1774037959",
+      "name": "CallSheet — Product Specification",
+      "tagline": "CallSheet generates real-time call readiness briefings for sales reps making international calls. Ty",
+      "description": "CallSheet generates real-time call readiness briefings for sales reps making international calls. Type a city name, get a color-coded verdict: green (good to call), amber (proceed with caution), or red (don't call now) — backed by a complete briefing card with local time, holiday status, weather, ",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "building",
+      "spec_dir": "project-1774037959",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-21",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 35,
+        "ran_refiner": true
+      },
+      "agent_timings": {
+        "planner": 184,
+        "builder": 1015,
+        "qa": 1030,
+        "designer": 562
+      }
+    },
+    {
+      "id": "project-1774041021",
+      "name": "GoldenHour — Product Specification",
+      "tagline": "GoldenHour is a live shooting-conditions intelligence tool for photographers. Enter any location —",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "live",
+      "spec_dir": "project-1774041021",
+      "repo": "https://github.com/aumvats/goldenhour",
+      "live_url": "https://goldenhour-app.vercel.app",
+      "vercel_project": "",
+      "created_at": "2026-03-21",
+      "built_at": "2026-03-21",
+      "deployed_at": "2026-03-21",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 35,
+        "ran_refiner": true
+      },
+      "agent_timings": {
+        "planner": 173,
+        "builder": 817,
+        "qa": 1141,
+        "designer": 703,
+        "optimizer": 441
+      }
+    },
+    {
+      "id": "project-1774046223",
+      "name": "SkyRoute — Product Specification",
+      "tagline": "SkyRoute is a weather intelligence tool for road trips and long drives. Enter your starting point an",
+      "description": "SkyRoute is a weather intelligence tool for road trips and long drives. Enter your starting point and destination — SkyRoute calculates the optimal route, divides it into hourly driving segments, and fetches the weather forecast at every point along the way. Instead of checking weather at your des",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "paused",
+      "spec_dir": "project-1774046223",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-21",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 37,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 245,
+        "builder": 1000,
+        "qa": 973,
+        "designer": 638
       }
     }
   ],
