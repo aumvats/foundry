@@ -263,6 +263,7 @@ When done, make sure npm run build passes (if applicable to your role)."
     timeout "$AGENT_TIMEOUT" claude \
       --dangerously-skip-permissions \
       --model "$(agent_model "$agent_name")" \
+      --effort high \
       --add-dir "$PROJECT_DIR" \
       --add-dir "$FACTORY_DIR" \
       -p "$full_prompt" 2>&1 | tee -a "$LOG_FILE"

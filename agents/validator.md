@@ -81,7 +81,7 @@ Run each check mechanically. Do not interpret charitably. If a value is ambiguou
 - `section4_min_2_flows`: At least 2 distinct user flows
 
 **Section 5:**
-- `section5_all_colors_are_hex`: ALL color values are hex codes (#XXXXXX format). If ANY color is a name, Tailwind class, or approximation → false
+- `section5_all_colors_are_hex`: ALL color token values are hex codes (#XXXXXX format). If ANY color is a name, Tailwind class, or approximation → false. **Exclude** entries whose values are multi-part CSS shorthand containing px/em/rem lengths (e.g. box-shadow values like `0 1px 3px rgba(0,0,0,0.1)`, text-shadow, gradient definitions) — these are not color tokens and must not be checked here.
 - `section5_all_required_color_tokens`: All of these tokens are present: primary, bg, surface, border, text-primary, text-secondary, accent, success, error, warning
 - `section5_typography_complete`: heading font, body font, h1-h3 sizes, body size all specified with units (px or rem)
 - `section5_spacing_base_unit`: A base spacing unit in px is specified

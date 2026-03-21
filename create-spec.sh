@@ -136,6 +136,7 @@ run_spec_agent() {
   timeout "$timeout_secs" claude \
     --dangerously-skip-permissions \
     --model "$model" \
+    --effort high \
     --max-budget-usd "$budget_usd" \
     --add-dir "$project_dir" \
     --add-dir "$FACTORY_DIR" \
