@@ -429,7 +429,7 @@
       "vercel_project": "",
       "created_at": "2026-03-20",
       "built_at": "2026-03-21",
-      "deployed_at": "",
+      "deployed_at": "2026-03-21",
       "build_attempts": 0,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
@@ -452,14 +452,14 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "building",
+      "status": "live",
       "spec_dir": "project-1774037959",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/callsheet",
+      "live_url": "https://callsheet-app.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-21",
-      "built_at": "",
-      "deployed_at": "",
+      "built_at": "2026-03-21",
+      "deployed_at": "2026-03-21",
       "build_attempts": 0,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:REWRITE",
@@ -470,7 +470,8 @@
         "planner": 184,
         "builder": 1015,
         "qa": 1030,
-        "designer": 562
+        "designer": 562,
+        "optimizer": 1160
       }
     },
     {
@@ -511,7 +512,7 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "paused",
+      "status": "building",
       "spec_dir": "project-1774046223",
       "repo": "",
       "live_url": "",
