@@ -360,6 +360,7 @@ for agent_name in "${PIPELINE_AGENTS[@]}"; do
     emit_event "agent_failed" "project_id=$PROJECT_ID" "agent=$agent_name"
     linear_update_state "$BUILD_ISSUE_ID" "In Review" || true
     linear_add_comment "$BUILD_ISSUE_ID" "⚠️ Paused: **$agent_name** failed after $MAX_RETRIES attempts (${_agent_dur}s)" || true
+    notify "⚠️ Foundry — Build Paused" "$PROJECT_NAME paused at $agent_name. Resume: ./build-project.sh $PROJECT_ID --resume-from $agent_name" "urgent"
     PIPELINE_FAILED=true
     pause_project "$agent_name agent failed after $MAX_RETRIES attempts"
     warn "Pipeline paused at $agent_name"
@@ -387,6 +388,7 @@ for agent_name in "${PIPELINE_AGENTS[@]}"; do
       log "Verifying npm run build..."
       if ! npm run build 2>&1 | tail -5; then
         warn "Build failed after $agent_name — pausing pipeline"
+        notify "⚠️ Foundry — Build Failed" "$PROJECT_NAME: npm build failed after $agent_name. Resume: ./build-project.sh $PROJECT_ID --resume-from $agent_name" "urgent"
         PIPELINE_FAILED=true
         pause_project "npm run build failed after $agent_name agent"
         break
@@ -426,6 +428,7 @@ if [ -f "package.json" ]; then
     warn "Final build failed — pausing pipeline"
     write_projects_json "(.projects[] | select(.id == \"$PROJECT_ID\") | .status) = \"paused\""
     pause_project "npm run build failed after optimizer agent"
+    notify "⚠️ Foundry — Final Build Failed" "$PROJECT_NAME: final npm build failed after optimizer. Check: $LOG_FILE" "urgent"
     echo -e "\n${BOLD}╔══════════════════════════════════════════════════════════╗${NC}"
     echo -e "${BOLD}║           FINAL BUILD FAILED — NEEDS ATTENTION          ║${NC}"
     echo -e "${BOLD}╠══════════════════════════════════════════════════════════╣${NC}"

@@ -81,6 +81,13 @@ for dep in jq gh node npm; do
   command -v "$dep" >/dev/null 2>&1 || fail "Missing dependency: $dep"
 done
 
+# Disk check
+DISK_PCT=$(df -h / | awk 'NR==2 {gsub(/%/,"",$5); print $5}')
+if [ "${DISK_PCT:-0}" -ge 90 ]; then
+  notify "⚠️ Foundry — Disk Full" "Disk at ${DISK_PCT}%. Build pipeline aborted. Free up space." "urgent"
+  fail "Disk at ${DISK_PCT}% — aborting to avoid build failures"
+fi
+
 ok "Pre-flight checks passed"
 
 # ── STALE PROJECT SCAN ────────────────────────────────────────────────────────

@@ -105,6 +105,7 @@ fi
 DISK_PCT=$(df -h ~ | awk 'NR==2 {gsub(/%/,"",$5); print $5}')
 if [ "$DISK_PCT" -gt 85 ]; then
   echo "DISK FULL $(date): ${DISK_PCT}% used" >> "$LOG_DIR/alerts.log"
+  notify "⚠️ Foundry — Disk Full" "Disk at ${DISK_PCT}%. Spec pipeline aborted. Free up space." "urgent"
   fail "Disk usage at ${DISK_PCT}% — aborting spec pipeline"
 fi
 
@@ -510,6 +511,7 @@ Do NOT modify any other file. Do NOT touch projects.json."
         "$PROJECTS_JSON" > "${PROJECTS_JSON}.tmp" && mv "${PROJECTS_JSON}.tmp" "$PROJECTS_JSON" || true
       echo "needs_spec_revision:$PROJECT_ID:$FAILING_CHECKS" >> "$LOG_DIR/needs-review-queue.md"
       emit_event "spec_needs_revision" "project_id=$PROJECT_ID" "project_name=${PRODUCT_NAME:-unknown}" "failing=$FAILING_CHECKS"
+      notify "⚠️ Foundry — Spec Needs Revision" "${PRODUCT_NAME:-$PROJECT_ID} passed Critic but failed validation: $FAILING_CHECKS" "urgent"
     else
       # Refiner already ran and Validator still fails — genuine spec revision needed
       warn "$PROJECT_ID → needs_spec_revision (Refiner already ran, still failing: $FAILING_CHECKS)"
@@ -517,6 +519,7 @@ Do NOT modify any other file. Do NOT touch projects.json."
         "$PROJECTS_JSON" > "${PROJECTS_JSON}.tmp" && mv "${PROJECTS_JSON}.tmp" "$PROJECTS_JSON" || true
       echo "needs_spec_revision:$PROJECT_ID:$FAILING_CHECKS" >> "$LOG_DIR/needs-review-queue.md"
       emit_event "spec_needs_revision" "project_id=$PROJECT_ID" "project_name=${PRODUCT_NAME:-unknown}" "failing=$FAILING_CHECKS"
+      notify "⚠️ Foundry — Spec Needs Revision" "${PRODUCT_NAME:-$PROJECT_ID} passed Critic but failed validation: $FAILING_CHECKS" "urgent"
     fi
   fi
 
