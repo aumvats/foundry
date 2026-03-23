@@ -579,7 +579,7 @@
       "vercel_project": "",
       "created_at": "2026-03-22",
       "built_at": "2026-03-23",
-      "deployed_at": "",
+      "deployed_at": "2026-03-23",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
@@ -602,19 +602,26 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "queued",
+      "status": "live",
       "spec_dir": "project-1774244833",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/firmpulse",
+      "live_url": "https://firmpulse.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-23",
-      "built_at": "",
+      "built_at": "2026-03-23",
       "deployed_at": "",
-      "build_attempts": 0,
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:REWRITE",
         "total_score": 35,
         "ran_refiner": true
+      },
+      "agent_timings": {
+        "planner": 159,
+        "builder": 1959,
+        "qa": 660,
+        "designer": 730,
+        "optimizer": 620
       }
     },
     {
