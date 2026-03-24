@@ -662,19 +662,26 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "queued",
+      "status": "live",
       "spec_dir": "project-1774326617",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/nutricard",
+      "live_url": "https://nutricard-app.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-24",
-      "built_at": "",
-      "deployed_at": "",
-      "build_attempts": 0,
+      "built_at": "2026-03-24",
+      "deployed_at": "2026-03-24",
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 35,
         "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 264,
+        "builder": 683,
+        "qa": 609,
+        "designer": 565,
+        "optimizer": 1149
       }
     },
     {
