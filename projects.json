@@ -706,6 +706,59 @@
         "total_score": 35,
         "ran_refiner": false
       }
+    },
+    {
+      "id": "project-1774413017",
+      "name": "ReloScore — Product Specification",
+      "tagline": "ReloScore is a scored city comparison tool for people deciding where to relocate within the US. Ente",
+      "description": "ReloScore is a scored city comparison tool for people deciding where to relocate within the US. Enter two cities and get an instant side-by-side dashboard with a composite \"relocation score\" (0–100) built from three transparent sub-scores: Climate Comfort, Affordability, and Demographic Strength. ",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "live",
+      "spec_dir": "project-1774413017",
+      "repo": "https://github.com/aumvats/reloscore",
+      "live_url": "https://reloscore.vercel.app",
+      "vercel_project": "",
+      "created_at": "2026-03-25",
+      "built_at": "2026-03-25",
+      "deployed_at": "2026-03-25",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 36,
+        "ran_refiner": true
+      },
+      "agent_timings": {
+        "planner": 171,
+        "builder": 1046,
+        "qa": 723,
+        "designer": 623,
+        "optimizer": 802
+      }
+    },
+    {
+      "id": "project-1774418413",
+      "name": "BrandScout — Product Specification",
+      "tagline": "BrandScout monitors news mentions of your brand and up to two competitors, scores each article's sen",
+      "description": "BrandScout monitors news mentions of your brand and up to two competitors, scores each article's sentiment using AI, and renders a live intelligence dashboard with trend charts, composite \"Press Scores,\" and side-by-side comparison views. The target buyer is an indie SaaS founder or small marketing ",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1774418413",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-25",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      }
     }
   ],
   "queue": []
