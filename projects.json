@@ -745,19 +745,26 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "queued",
+      "status": "live",
       "spec_dir": "project-1774418413",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/brandscout",
+      "live_url": "https://brandscout.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-25",
-      "built_at": "",
+      "built_at": "2026-03-25",
       "deployed_at": "",
-      "build_attempts": 0,
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 35,
         "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 161,
+        "builder": 915,
+        "qa": 301,
+        "designer": 633,
+        "optimizer": 750
       }
     }
   ],
