@@ -805,14 +805,14 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "building",
+      "status": "live",
       "spec_dir": "project-1774500866",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/cropcast",
+      "live_url": "https://cropcast-app.vercel.app",
       "vercel_project": "",
       "created_at": "2026-03-26",
-      "built_at": "",
-      "deployed_at": "",
+      "built_at": "2026-03-26",
+      "deployed_at": "2026-03-26",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:REWRITE",
@@ -823,7 +823,8 @@
         "planner": 152,
         "builder": 697,
         "qa": 520,
-        "designer": 512
+        "designer": 512,
+        "optimizer": 915
       }
     }
   ],
