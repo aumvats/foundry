@@ -536,7 +536,7 @@
     },
     {
       "id": "project-1774195008",
-      "name": "ListScan — Product Specification",
+      "name": "ListScan",
       "tagline": "ListScan is a signup quality intelligence dashboard for SaaS founders and small marketing teams. Pas",
       "description": "ListScan is a signup quality intelligence dashboard for SaaS founders and small marketing teams. Paste a list of email addresses (or upload a CSV with emails and IPs), and in seconds ListScan scores each signup across four dimensions: email validity, disposable email detection, IP geolocation, and d",
       "category": "Developer Tools",
@@ -566,7 +566,7 @@
     },
     {
       "id": "project-1774197204",
-      "name": "FolioLens — Product Specification",
+      "name": "FolioLens",
       "tagline": "FolioLens is an instant portfolio exposure analyzer. Paste your stock tickers and share counts — g",
       "description": "FolioLens is an instant portfolio exposure analyzer. Paste your stock tickers and share counts — get a visual breakdown of your actual concentration by sector, geography, market cap tier, and single-stock risk in under 5 seconds. The alternative is Bloomberg ($24K/year), Morningstar X-Ray ($35/mon",
       "category": "Developer Tools",
@@ -596,7 +596,7 @@
     },
     {
       "id": "project-1774244833",
-      "name": "FirmPulse — Product Specification",
+      "name": "FirmPulse",
       "tagline": "FirmPulse is a supplier risk intelligence tool that turns stock tickers into actionable risk assessm",
       "description": "",
       "category": "Developer Tools",
@@ -626,7 +626,7 @@
     },
     {
       "id": "project-1774247614",
-      "name": "AssetRace — Product Specification",
+      "name": "AssetRace",
       "tagline": "AssetRace is a cross-asset-class performance comparison tool for individual investors and financial ",
       "description": "",
       "category": "Developer Tools",
@@ -656,7 +656,7 @@
     },
     {
       "id": "project-1774326617",
-      "name": "NutriCard — Product Specification",
+      "name": "NutriCard",
       "tagline": "NutriCard is a recipe nutrition calculator and embeddable card generator for food bloggers and conte",
       "description": "",
       "category": "Developer Tools",
@@ -686,7 +686,7 @@
     },
     {
       "id": "project-1774331455",
-      "name": "GitSignal — Product Specification",
+      "name": "GitSignal",
       "tagline": "GitSignal turns a GitHub username into a personalized developer market intelligence report. It analy",
       "description": "GitSignal turns a GitHub username into a personalized developer market intelligence report. It analyzes your public repositories — languages, frameworks, contribution patterns, code volume — then cross-references those skills against live remote job listings from three independent job boards (Re",
       "category": "Developer Tools",
@@ -709,7 +709,7 @@
     },
     {
       "id": "project-1774413017",
-      "name": "ReloScore — Product Specification",
+      "name": "ReloScore",
       "tagline": "ReloScore is a scored city comparison tool for people deciding where to relocate within the US. Ente",
       "description": "ReloScore is a scored city comparison tool for people deciding where to relocate within the US. Enter two cities and get an instant side-by-side dashboard with a composite \"relocation score\" (0–100) built from three transparent sub-scores: Climate Comfort, Affordability, and Demographic Strength. ",
       "category": "Developer Tools",
@@ -739,7 +739,7 @@
     },
     {
       "id": "project-1774418413",
-      "name": "BrandScout — Product Specification",
+      "name": "BrandScout",
       "tagline": "BrandScout monitors news mentions of your brand and up to two competitors, scores each article's sen",
       "description": "BrandScout monitors news mentions of your brand and up to two competitors, scores each article's sentiment using AI, and renders a live intelligence dashboard with trend charts, composite \"Press Scores,\" and side-by-side comparison views. The target buyer is an indie SaaS founder or small marketing ",
       "category": "Developer Tools",
@@ -769,7 +769,7 @@
     },
     {
       "id": "project-1774499418",
-      "name": "CoinTally — Product Specification",
+      "name": "CoinTally",
       "tagline": "CoinTally is a crypto income documentation tool for freelancers and small businesses that accept cry",
       "description": "CoinTally is a crypto income documentation tool for freelancers and small businesses that accept cryptocurrency as payment. Log a crypto payment — coin, amount, date received — and instantly see its fair market value in your local currency on that date, which is exactly what tax authorities requ",
       "category": "Developer Tools",
@@ -782,7 +782,7 @@
       "vercel_project": "",
       "created_at": "2026-03-26",
       "built_at": "2026-03-26",
-      "deployed_at": "",
+      "deployed_at": "2026-03-26",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
@@ -799,13 +799,13 @@
     },
     {
       "id": "project-1774500866",
-      "name": "CropCast — Product Specification",
+      "name": "CropCast",
       "tagline": "CropCast is a data-driven planting intelligence tool for home gardeners and small-scale growers. Ent",
       "description": "",
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "queued",
+      "status": "building",
       "spec_dir": "project-1774500866",
       "repo": "",
       "live_url": "",
@@ -813,11 +813,17 @@
       "created_at": "2026-03-26",
       "built_at": "",
       "deployed_at": "",
-      "build_attempts": 0,
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:REWRITE",
         "total_score": 36,
         "ran_refiner": true
+      },
+      "agent_timings": {
+        "planner": 152,
+        "builder": 697,
+        "qa": 520,
+        "designer": 512
       }
     }
   ],

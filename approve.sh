@@ -160,6 +160,10 @@ fi
 emit_event "deployed" "project_id=$PROJECT_ID" "project_name=$DISPLAY_NAME" "url=${DEPLOYED_URL:-unknown}" "repo=${REPO_URL:-unknown}"
 append_history "🚀" "LIVE" "$DISPLAY_NAME → ${DEPLOYED_URL:-unknown}"
 
+# Sync foundry-hq directory site
+log "Syncing foundry-hq directory..."
+bash "$FACTORY_DIR/lib/sync-directory.sh" "$PROJECT_ID" 2>&1 | tee -a "$DEPLOY_LOG" || warn "foundry-hq sync failed (non-fatal)"
+
 # Linear: Deploy → Done, complete project, add live URL comment
 linear_update_state "$DEPLOY_ISSUE_ID" "Done" || true
 linear_complete_project "$LINEAR_PROJECT_ID" || true
