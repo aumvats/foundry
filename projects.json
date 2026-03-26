@@ -752,7 +752,7 @@
       "vercel_project": "",
       "created_at": "2026-03-25",
       "built_at": "2026-03-25",
-      "deployed_at": "",
+      "deployed_at": "2026-03-25",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
@@ -765,6 +765,59 @@
         "qa": 301,
         "designer": 633,
         "optimizer": 750
+      }
+    },
+    {
+      "id": "project-1774499418",
+      "name": "CoinTally — Product Specification",
+      "tagline": "CoinTally is a crypto income documentation tool for freelancers and small businesses that accept cry",
+      "description": "CoinTally is a crypto income documentation tool for freelancers and small businesses that accept cryptocurrency as payment. Log a crypto payment — coin, amount, date received — and instantly see its fair market value in your local currency on that date, which is exactly what tax authorities requ",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "live",
+      "spec_dir": "project-1774499418",
+      "repo": "https://github.com/aumvats/cointally",
+      "live_url": "https://cointally-app.vercel.app",
+      "vercel_project": "",
+      "created_at": "2026-03-26",
+      "built_at": "2026-03-26",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 151,
+        "builder": 774,
+        "qa": 897,
+        "designer": 561,
+        "optimizer": 401
+      }
+    },
+    {
+      "id": "project-1774500866",
+      "name": "CropCast — Product Specification",
+      "tagline": "CropCast is a data-driven planting intelligence tool for home gardeners and small-scale growers. Ent",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1774500866",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-26",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 36,
+        "ran_refiner": true
       }
     }
   ],
