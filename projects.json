@@ -826,6 +826,113 @@
         "designer": 512,
         "optimizer": 915
       }
+    },
+    {
+      "id": "project-1774586541",
+      "name": "PourProfit — Product Specification",
+      "tagline": "PourProfit turns a bar's spirit inventory into a live profitability dashboard. Enter the bottles you",
+      "description": "PourProfit turns a bar's spirit inventory into a live profitability dashboard. Enter the bottles you have on hand with their purchase prices, and PourProfit cross-references 600+ cocktail recipes to instantly show every drink you can make, the exact cost to pour each one, the per-drink profit at you",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "paused",
+      "spec_dir": "project-1774586541",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-27",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 37,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 186
+      }
+    },
+    {
+      "id": "project-1774590713",
+      "name": "PodBrief — Product Specification",
+      "tagline": "PodBrief eliminates the 15-30 minutes podcast hosts spend manually researching each guest before rec",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "paused",
+      "spec_dir": "project-1774590713",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-27",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 158,
+        "builder": 1054,
+        "qa": 517
+      }
+    },
+    {
+      "id": "project-1774672215",
+      "name": "NightCast — Product Specification",
+      "tagline": "NightCast is a stargazing session planner that answers the #1 question every amateur astronomer asks",
+      "description": "NightCast is a stargazing session planner that answers the #1 question every amateur astronomer asks: \"Is tonight a good night to observe?\" Enter a location and get an instant quality score (1–5 stars) built from real-time cloud cover forecasts, humidity, wind, moon phase, and light pollution esti",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "live",
+      "spec_dir": "project-1774672215",
+      "repo": "https://github.com/aumvats/nightcast",
+      "live_url": "https://nightcast.vercel.app",
+      "vercel_project": "",
+      "created_at": "2026-03-28",
+      "built_at": "2026-03-28",
+      "deployed_at": "2026-03-28",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 38,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 121,
+        "builder": 788,
+        "qa": 458,
+        "designer": 616,
+        "optimizer": 955
+      }
+    },
+    {
+      "id": "project-1774673848",
+      "name": "ShelfScan — Product Specification",
+      "tagline": "ShelfScan is a book niche intelligence tool for self-published authors and content creators. Enter a",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1774673848",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-28",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 36,
+        "ran_refiner": false
+      }
     }
   ],
   "queue": []
