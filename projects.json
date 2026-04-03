@@ -940,6 +940,177 @@
         "designer": 686,
         "optimizer": 576
       }
+    },
+    {
+      "id": "project-1774768856",
+      "name": "CrowdCue — Product Specification",
+      "tagline": "CrowdCue turns live sports schedules, local weather forecasts, and public holidays into a week-ahead",
+      "description": "CrowdCue turns live sports schedules, local weather forecasts, and public holidays into a week-ahead crowd prediction calendar for hospitality venues. A bar owner opens CrowdCue on Monday morning, sees that Thursday is flagged HIGH (primetime rivalry game + clear 72°F weather), Sunday is PACKED (fu",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "paused",
+      "spec_dir": "project-1774768856",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-29",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      }
+    },
+    {
+      "id": "project-1774769709",
+      "name": "ClearDay — Product Specification",
+      "tagline": "ClearDay turns 20 years of granular historical weather records into statistically robust, date-speci",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "paused",
+      "spec_dir": "project-1774769709",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-03-29",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 37,
+        "ran_refiner": true
+      }
+    },
+    {
+      "id": "project-1775104219",
+      "name": "ReviewPulse — Product Specification",
+      "tagline": "ReviewPulse is a multilingual product review intelligence dashboard for e-commerce sellers and small",
+      "description": "ReviewPulse is a multilingual product review intelligence dashboard for e-commerce sellers and small SaaS founders. Upload your product reviews from any platform (Shopify, Amazon, Etsy, or any CSV export) and in under 30 seconds see an instant sentiment breakdown: overall score, per-topic analysis (",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "needs_spec_revision",
+      "spec_dir": "project-1775104219",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-04-02",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      }
+    },
+    {
+      "id": "project-1775105781",
+      "name": "RunSheet — Product Specification",
+      "tagline": "RunSheet turns a messy list of delivery addresses into an optimized, printable run sheet in under 30",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "paused",
+      "spec_dir": "project-1775105781",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-04-02",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 158
+      }
+    },
+    {
+      "id": "project-1775106746",
+      "name": "FraudLens — Product Specification",
+      "tagline": "FraudLens gives small e-commerce sellers a one-click fraud check before they ship an order. Enterpri",
+      "description": "FraudLens gives small e-commerce sellers a one-click fraud check before they ship an order. Enterprise fraud tools (Signifyd, ClearSale, Riskified) cost $300–$1,000+/month and require deep platform integrations. Sellers on Etsy, eBay, Squarespace, or Facebook Marketplace have no affordable option ",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "paused",
+      "spec_dir": "project-1775106746",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-04-02",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 36,
+        "ran_refiner": false
+      }
+    },
+    {
+      "id": "project-1775194725",
+      "name": "VATReady — Product Specification",
+      "tagline": "VATReady turns the nightmare of EU cross-border VAT compliance into a 10-second calculation. Small e",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "live",
+      "spec_dir": "project-1775194725",
+      "repo": "https://github.com/aumvats/vatready",
+      "live_url": "https://vatready.vercel.app",
+      "vercel_project": "",
+      "created_at": "2026-04-03",
+      "built_at": "2026-04-03",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 300,
+        "builder": 984,
+        "qa": 669,
+        "designer": 594,
+        "optimizer": 571
+      }
+    },
+    {
+      "id": "project-1775195976",
+      "name": "BreachBoard — Product Specification",
+      "tagline": "BreachBoard is a team credential exposure dashboard for small businesses. Paste your team's work ema",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "needs_review",
+      "spec_dir": "project-1775195976",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-04-03",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      }
     }
   ],
   "queue": []
