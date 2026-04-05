@@ -1074,7 +1074,7 @@
       "vercel_project": "",
       "created_at": "2026-04-03",
       "built_at": "2026-04-03",
-      "deployed_at": "",
+      "deployed_at": "2026-04-03",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
@@ -1109,6 +1109,82 @@
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 35,
+        "ran_refiner": false
+      }
+    },
+    {
+      "id": "project-1775284123",
+      "name": "ChargeGap — Product Specification",
+      "tagline": "ChargeGap is an EV charging infrastructure gap analyzer that turns raw charging station data into ac",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "live",
+      "spec_dir": "project-1775284123",
+      "repo": "https://github.com/aumvats/chargegap",
+      "live_url": "https://chargegap.vercel.app",
+      "vercel_project": "",
+      "created_at": "2026-04-04",
+      "built_at": "2026-04-05",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 37,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 1662,
+        "builder": 773,
+        "qa": 533,
+        "designer": 388,
+        "optimizer": 360
+      }
+    },
+    {
+      "id": "project-1775284908",
+      "name": "FXLedger — Product Specification",
+      "tagline": "FXLedger is a lightweight foreign-currency invoice tracker built for freelancers and micro-agencies ",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1775284908",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-04-04",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:REWRITE",
+        "total_score": 35,
+        "ran_refiner": true
+      }
+    },
+    {
+      "id": "project-1775373691",
+      "name": "FedEdge — Product Specification",
+      "tagline": "FedEdge turns opaque federal government pay grades into instant, location-aware salary intelligence.",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1775373691",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-04-05",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 39,
         "ran_refiner": false
       }
     }
