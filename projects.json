@@ -1127,7 +1127,7 @@
       "vercel_project": "",
       "created_at": "2026-04-04",
       "built_at": "2026-04-05",
-      "deployed_at": "",
+      "deployed_at": "2026-04-05",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
@@ -1150,7 +1150,7 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "queued",
+      "status": "building",
       "spec_dir": "project-1775284908",
       "repo": "",
       "live_url": "",
@@ -1158,11 +1158,14 @@
       "created_at": "2026-04-04",
       "built_at": "",
       "deployed_at": "",
-      "build_attempts": 0,
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:REWRITE",
         "total_score": 35,
         "ran_refiner": true
+      },
+      "agent_timings": {
+        "planner": 238
       }
     },
     {
@@ -1173,19 +1176,26 @@
       "category": "Developer Tools",
       "color": "#6366F1",
       "pricing": "",
-      "status": "queued",
+      "status": "live",
       "spec_dir": "project-1775373691",
-      "repo": "",
-      "live_url": "",
+      "repo": "https://github.com/aumvats/fededge",
+      "live_url": "https://fededge.vercel.app",
       "vercel_project": "",
       "created_at": "2026-04-05",
-      "built_at": "",
+      "built_at": "2026-04-06",
       "deployed_at": "",
-      "build_attempts": 0,
+      "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
         "total_score": 39,
         "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 282,
+        "builder": 1056,
+        "qa": 513,
+        "designer": 630,
+        "optimizer": 714
       }
     }
   ],
