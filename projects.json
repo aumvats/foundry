@@ -1183,7 +1183,7 @@
       "vercel_project": "",
       "created_at": "2026-04-05",
       "built_at": "2026-04-06",
-      "deployed_at": "",
+      "deployed_at": "2026-04-06",
       "build_attempts": 1,
       "spec_pipeline": {
         "critic_verdict": "VERDICT:PROCEED",
@@ -1196,6 +1196,59 @@
         "qa": 513,
         "designer": 630,
         "optimizer": 714
+      }
+    },
+    {
+      "id": "project-1775538115",
+      "name": "ToneGuard — Product Specification",
+      "tagline": "ToneGuard turns a wall of community messages into an instant, visual toxicity report. Community mana",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "live",
+      "spec_dir": "project-1775538115",
+      "repo": "https://github.com/aumvats/toneguard",
+      "live_url": "https://toneguard.vercel.app",
+      "vercel_project": "",
+      "created_at": "2026-04-07",
+      "built_at": "2026-04-07",
+      "deployed_at": "",
+      "build_attempts": 1,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 35,
+        "ran_refiner": false
+      },
+      "agent_timings": {
+        "planner": 169,
+        "builder": 676,
+        "qa": 495,
+        "designer": 672,
+        "optimizer": 757
+      }
+    },
+    {
+      "id": "project-1775539207",
+      "name": "DueBrief — Product Specification",
+      "tagline": "DueBrief is an instant UK company trust assessment tool that turns a company name or number into a s",
+      "description": "",
+      "category": "Developer Tools",
+      "color": "#6366F1",
+      "pricing": "",
+      "status": "queued",
+      "spec_dir": "project-1775539207",
+      "repo": "",
+      "live_url": "",
+      "vercel_project": "",
+      "created_at": "2026-04-07",
+      "built_at": "",
+      "deployed_at": "",
+      "build_attempts": 0,
+      "spec_pipeline": {
+        "critic_verdict": "VERDICT:PROCEED",
+        "total_score": 36,
+        "ran_refiner": false
       }
     }
   ],
